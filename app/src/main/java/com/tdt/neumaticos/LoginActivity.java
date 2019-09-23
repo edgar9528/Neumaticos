@@ -121,12 +121,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
                 Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
             }
 
-        }catch (Exception e)
+        }
+        catch (Exception e)
         {
             Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     public void guardarUsuario()
