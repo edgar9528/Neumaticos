@@ -1,11 +1,9 @@
 package com.tdt.neumaticos;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,15 +18,6 @@ import android.widget.Toast;
 
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.charset.Charset;
 
 public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
@@ -111,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
 
-                    Intent intent = new Intent(LoginActivity.this, CrearUsuarioActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
                     startActivity(intent);
 
                     return super.onDoubleTap(e);
@@ -120,14 +109,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("TEST", "Raw event: " + event.getAction() + ", (" + event.getRawX() + ", " + event.getRawY() + ")");
+                //un click
                 gestureDetector.onTouchEvent(event);
                 return true;
             }});
 
     }
-
-
 
     //recibe respuesta de la peticion al socket
     @Override

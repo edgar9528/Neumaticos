@@ -25,7 +25,7 @@
             android:name="com.tdt.neumaticos.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tdt.neumaticos.CrearUsuarioActivity"
+            android:name="com.tdt.neumaticos.ConfiguracionActivity"
             android:parentActivityName="com.tdt.neumaticos.LoginActivity"
             android:windowSoftInputMode="stateHidden">
             <meta-data
