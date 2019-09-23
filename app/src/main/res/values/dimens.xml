@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_cardview">100dp</dimen>
+    <dimen name="height_cardview2">80dp</dimen>
+    <dimen name="vertical_margin">15dp</dimen>
+    <dimen name="cornerRadius_carview">5dp</dimen>
+    <dimen name="paddingHorin">32dp</dimen>
+    <dimen name="Text_cardview">18sp</dimen>
+    <dimen name="Text_crearCuenta">15sp</dimen>
+    <dimen name="Title_cardview">20sp</dimen>
+    <dimen name="Text_data_profile">18sp</dimen>
+    <dimen name="Text_data">20sp</dimen>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tdt.neumaticos">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.tdt.neumaticos.LoginActivity"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tdt.neumaticos.MainActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tdt.neumaticos.CrearUsuarioActivity"
+            android:parentActivityName="com.tdt.neumaticos.LoginActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tdt.neumaticos.LoginActivity" />
+        </activity>
+        <activity
+            android:name="com.tdt.neumaticos.DetallePeliculaActivity"
+            android:parentActivityName="com.tdt.neumaticos.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tdt.neumaticos.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ChatbotActivity"
+            android:parentActivityName="com.tdt.neumaticos.LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tdt.neumaticos.LoginActivity" />
+        </activity>
+
+        <activity android:name="com.tdt.neumaticos.PeliculasVistasActivity"
+            android:parentActivityName="com.tdt.neumaticos.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tdt.neumaticos.MainActivity" />
+        </activity>
+
+
+    </application>
+
+</manifest>
