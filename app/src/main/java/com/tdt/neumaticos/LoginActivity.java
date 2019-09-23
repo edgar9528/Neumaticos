@@ -11,8 +11,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tdt.neumaticos.Clases.AsyncResponse;
@@ -27,11 +30,14 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
-public class LoginActivity extends AppCompatActivity implements AsyncResponse {
+public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     Button button_sesion;
     TextInputEditText ti_usuario,ti_contrasena;
     String usuario,pass,permisos;
+    boolean servidor_conf=false;
+
+    ImageView iv_logo;
 
     @Override
     public void onBackPressed() {
@@ -65,36 +71,63 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
 
         //VERIFICAR SI ES USUARIO YA SE HA LOGUEADO ANTES
         verificarUsuario();
+        verificarServidor();
 
         button_sesion = (Button) findViewById(R.id.Blogin);
         ti_usuario = (TextInputEditText) findViewById(R.id.TIusername);
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
+        iv_logo = findViewById(R.id.logo);
 
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty())
-                {
-                    usuario=ti_usuario.getText().toString();
-                    pass=ti_contrasena.getText().toString();
+                if(servidor_conf) {
+                    if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
+                        usuario = ti_usuario.getText().toString();
+                        pass = ti_contrasena.getText().toString();
 
-                    String command="10|"+usuario+"|"+pass+"\u001a";
+                        String command = "10|" + usuario + "|" + pass + "\u001a";
 
-                    //Envia la peticion al socket, recibe respuesta en
-                    //public void processFinish(String output)
-                    ConexionSocket conexionSocket = new ConexionSocket();
-                    conexionSocket.command=command;
-                    conexionSocket.context=LoginActivity.this;
-                    conexionSocket.delegate = LoginActivity.this;
-                    conexionSocket.execute();
+                        //Envia la peticion al socket, recibe respuesta en
+                        //public void processFinish(String output)
+                        ConexionSocket conexionSocket = new ConexionSocket();
+                        conexionSocket.command = command;
+                        conexionSocket.context = LoginActivity.this;
+                        conexionSocket.delegate = LoginActivity.this;
+                        conexionSocket.execute();
 
+                    } else
+                        Toast.makeText(LoginActivity.this, "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
                 }
                 else
-                    Toast.makeText(LoginActivity.this,"Debe llenar todos los campos",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Debe configurar servidor y puerto", Toast.LENGTH_SHORT).show();
             }
         });
 
+
+        //Doble click en imagen
+        iv_logo.setOnTouchListener(new View.OnTouchListener() {
+            private GestureDetector gestureDetector = new GestureDetector(LoginActivity.this, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+
+                    Intent intent = new Intent(LoginActivity.this, CrearUsuarioActivity.class);
+                    startActivity(intent);
+
+                    return super.onDoubleTap(e);
+                }
+            });
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("TEST", "Raw event: " + event.getAction() + ", (" + event.getRawX() + ", " + event.getRawY() + ")");
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }});
+
     }
+
+
 
     //recibe respuesta de la peticion al socket
     @Override
@@ -145,7 +178,18 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
 
         if(!usuario.equals("null"))
         {
-
         }
     }
+    public void verificarServidor()
+    {
+        SharedPreferences sharedPref = getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
+        String servidor = sharedPref.getString("servidor","null");
+
+        if(servidor.equals("null"))
+            servidor_conf=false;
+        else
+            servidor_conf=true;
+
+    }
+
 }

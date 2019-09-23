@@ -39,8 +39,10 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
     protected String doInBackground(String... strings) {
         String result = "false";
 
-        SERVER_IP = "192.168.0.188";
-        SERVER_PORT = 2048;
+        InfoServidor infoServidor = new InfoServidor(context);
+
+        SERVER_IP = infoServidor.getServidor();
+        SERVER_PORT = infoServidor.getPuerto();
 
         InetAddress serverAddr;
 
