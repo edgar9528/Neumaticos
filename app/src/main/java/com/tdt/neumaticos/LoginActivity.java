@@ -1,9 +1,11 @@
 package com.tdt.neumaticos;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.tdt.neumaticos.Clases.AsyncResponse;
+import com.tdt.neumaticos.Clases.ConexionSocket;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -22,15 +27,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements AsyncResponse {
 
-    Button button_sesion,button_conectar;
+    Button button_sesion;
     TextInputEditText ti_usuario,ti_contrasena;
-    String usuario,pass;
-
-    String SERVER_IP;
-    int SERVER_PORT;
-    Socket socket;
+    String usuario,pass,permisos;
 
     @Override
     public void onBackPressed() {
@@ -69,8 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         ti_usuario = (TextInputEditText) findViewById(R.id.TIusername);
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
 
-        button_conectar = findViewById(R.id.button_conectar);
-
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,9 +78,15 @@ public class LoginActivity extends AppCompatActivity {
                     usuario=ti_usuario.getText().toString();
                     pass=ti_contrasena.getText().toString();
 
-                    conectar();
+                    String command="10|"+usuario+"|"+pass+"\u001a";
 
-                    guardarUsuario();
+                    //Envia la peticion al socket, recibe respuesta en
+                    //public void processFinish(String output)
+                    ConexionSocket conexionSocket = new ConexionSocket();
+                    conexionSocket.command=command;
+                    conexionSocket.context=LoginActivity.this;
+                    conexionSocket.delegate = LoginActivity.this;
+                    conexionSocket.execute();
 
                 }
                 else
@@ -89,96 +94,39 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        button_conectar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
     }
 
-    public void conectar()
-    {
-        SERVER_IP = "192.168.0.188";
-        SERVER_PORT = 2048;
+    //recibe respuesta de la peticion al socket
+    @Override
+    public void processFinish(String output){
 
-        new Thread(new Runnable() {
-            public void run() {
-                InetAddress serverAddr;
-                try {
-                    String command="10|edgar|edgar"+"\u001a";
-                    String command2="10|"+usuario+"|"+pass+"\u001a";
-
-                    Log.d("salida",command);
-                    Log.d("salida",command2);
-
-                    //String command= String.format("10|%s|%snull", usuario, pass);
-
-                    //byte[] commandByte = command.getBytes();
-
-                    //Establecer conexion con servidor
-                    serverAddr = InetAddress.getByName(SERVER_IP);
-                    socket = new Socket(serverAddr, SERVER_PORT);
-
-
-                    //enviar el parametro
-                    OutputStream out = socket.getOutputStream();
-                    PrintWriter output = new PrintWriter(out);
-                    output.println(command);
-                    output.flush();
-
-
-                    //recibir información
-
-                    if(socket != null && socket.isConnected()){
-
-                        int byteCount=1024;
-                        BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
-                        byte[] buffer = new byte[byteCount];
-                        int con=0;
-                        while(input.read(buffer, 0, byteCount) != -1  )
-                        {
-                            String decoded = respuesta(buffer);
-                            Log.d("salida",decoded);
-                            con++;
-
-                            if(con==2)
-                                break;
-                        }
-
-                        /*BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        String line;
-                        while((line = input.readLine()) != null){
-                            Log.d("salida",line);
-                        }*/
-
-                    }
-
-                    //socket.close();
-
-                    Log.d("salida","cerro conexion");
-
-
-                } catch (Exception e) {
-
-                }
-            }
-        }).start();
-    }
-
-    public String respuesta(byte[] buffer)
-    {
-        StringBuilder sb = new StringBuilder(buffer.length);
-        for (int i = 0; i < buffer.length && buffer[i]!=0 ; ++ i)
+        try
         {
-            //Log.d("salida", String.valueOf(buffer[i] ) +" "+(char) buffer[i]  );
-            if (buffer[i] < 0)
-                throw new IllegalArgumentException();
-            sb.append((char) buffer[i]);
+            String clave = output.substring(0,2);
+            String mensaje = output.substring(2,output.length());
+            mensaje=mensaje.trim(); // elimina espacios en blanco al principio y final
+
+            if(clave.equals("BC"))
+            {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+
+                permisos=mensaje;
+
+                guardarUsuario();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
+            }
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
-        return sb.toString();
+
+
     }
 
     public void guardarUsuario()
@@ -187,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("usuario",usuario);
         editor.putString("pass",pass);
+        editor.putString("permisos",permisos);
         editor.apply();
     }
 
@@ -194,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
     {
         SharedPreferences sharedPref = getSharedPreferences("LoginPreferences",Context.MODE_PRIVATE);
         usuario = sharedPref.getString("usuario","null");
-        pass = sharedPref.getString("pass","null");
 
         if(!usuario.equals("null"))
         {
