@@ -143,9 +143,11 @@ public class MainActivity extends AppCompatActivity {
         nombresMenu = new ArrayList<>();
         nombresMenu.add("ejemplo1");
         nombresMenu.add("ejemplo2");
+        nombresMenu.add("ejemplo3");
 
         elemenosMenu.add(new DrawerItem(nombresMenu.get(0), R.drawable.logotdt));
         elemenosMenu.add(new DrawerItem(nombresMenu.get(1), R.drawable.logotdt));
+        elemenosMenu.add(new DrawerItem(nombresMenu.get(2), R.drawable.logotdt));
 
         listView.setAdapter(new DrawerListAdapter(this, elemenosMenu));
 
