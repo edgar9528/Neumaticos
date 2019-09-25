@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +22,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
-import com.tdt.neumaticos.Fragments.FragmentAmigos;
+import com.tdt.neumaticos.Fragments.AltaFragment;
+import com.tdt.neumaticos.Fragments.BajaFragment;
+import com.tdt.neumaticos.Fragments.CambiaubiFragment;
+import com.tdt.neumaticos.Fragments.ConfiguracionFragment;
+import com.tdt.neumaticos.Fragments.EntradaFragment;
+import com.tdt.neumaticos.Fragments.MantenimientoFragment;
+import com.tdt.neumaticos.Fragments.MontajeFragment;
+import com.tdt.neumaticos.Fragments.SalidaFragment;
 import com.tdt.neumaticos.Model.DrawerItem;
 
 import java.util.ArrayList;
@@ -31,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    ArrayList<String> nombresMenu;
-    ArrayList<DrawerItem> elemenosMenu;
+    ArrayList<DrawerItem> elementosMenu;
     String tituloActivo="";
 
     private ListView listView;
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState== null)
         {
-            selectItem(0,elemenosMenu.get(0).getName());
+            selectItem(0,elementosMenu.get(0).getName());
         }
 
 
@@ -108,17 +115,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void addDrawersItem() {
 
-        elemenosMenu = new ArrayList<DrawerItem>();
-        nombresMenu = new ArrayList<>();
-        nombresMenu.add("ejemplo1");
-        nombresMenu.add("ejemplo2");
-        nombresMenu.add("ejemplo3");
+        elementosMenu = new ArrayList<DrawerItem>();
+        String nombresMenu[] ={"Alta","Montaje","Configuración","Mantenimiento","Cambia ubicación","Baja","Salida","Entrada"};
 
-        elemenosMenu.add(new DrawerItem(nombresMenu.get(0), R.drawable.logotdt));
-        elemenosMenu.add(new DrawerItem(nombresMenu.get(1), R.drawable.logotdt));
-        elemenosMenu.add(new DrawerItem(nombresMenu.get(2), R.drawable.logotdt));
+        permisos=255;
 
-        listView.setAdapter(new DrawerListAdapter(this, elemenosMenu));
+        for(int i=0,b=1;i<8;i++,b=b+b)
+        {
+            if( (permisos&b)==b)
+            {
+                elementosMenu.add(new DrawerItem(nombresMenu[i], R.drawable.logotdt));
+            }
+        }
+
+        listView.setAdapter(new DrawerListAdapter(this, elementosMenu));
 
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String titulo = elemenosMenu.get(position-1).getName();
+            String titulo = elementosMenu.get(position-1).getName();
             selectItem(position,titulo);
         }
     }
@@ -184,9 +194,26 @@ public class MainActivity extends AppCompatActivity {
 
         tituloActivo=titulo;
 
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = null;
-        ft= fm.beginTransaction().replace(R.id.container,FragmentAmigos.newInstance(titulo,titulo));
+
+        Fragment fragment;
+
+        switch (position)
+        {
+            case 1: fragment= new AltaFragment(); break;
+            case 2: fragment= new MontajeFragment(); break;
+            case 3: fragment= new ConfiguracionFragment(); break;
+            case 4: fragment= new MantenimientoFragment(); break;
+            case 5: fragment= new CambiaubiFragment(); break;
+            case 6: fragment= new BajaFragment(); break;
+            case 7: fragment= new SalidaFragment(); break;
+            case 8: fragment= new EntradaFragment(); break;
+            default: fragment= new AltaFragment(); break;
+        }
+
+        ft= fm.beginTransaction().replace(R.id.container,fragment);
 
         ft.addToBackStack(null);
         if(false  || !BuildConfig.DEBUG)
