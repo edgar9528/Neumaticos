@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         elementosMenu = new ArrayList<DrawerItem>();
         String nombresMenu[] ={"Alta","Montaje","Configuración","Mantenimiento","Cambia ubicación","Baja","Salida","Entrada"};
+        int iconos[] = {R.drawable.ic_file_download};
 
         permisos=255;
 
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if( (permisos&b)==b)
             {
-                elementosMenu.add(new DrawerItem(nombresMenu[i], R.drawable.logotdt));
+                elementosMenu.add(new DrawerItem(nombresMenu[i], iconos[0]));
             }
         }
 
