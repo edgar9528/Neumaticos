@@ -18,11 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tdt.neumaticos.Adapter.CustomExpandableListAdapter;
+import com.tdt.neumaticos.Adapter.DrawerListAdapter;
 import com.tdt.neumaticos.Helper.FragmentNavigationManager;
 import com.tdt.neumaticos.Interface.NavigationManager;
+import com.tdt.neumaticos.Model.DrawerItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,11 +40,15 @@ public class MainActivity extends AppCompatActivity {
     private String mActivityTitle;
     private String[] items;
 
-    private ExpandableListView expandableListView;
+    //private ExpandableListView expandableListView;
     private ExpandableListAdapter adapter;
     private List<String> lstTitle;
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
+
+    ArrayList<DrawerItem> elemenosMenu;
+
+    private ListView listView;
 
     String user_id="",user_nombre="",user_correo="",user_contrasena="";
 
@@ -82,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
         //init view
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle= getTitle().toString();
-        expandableListView= findViewById(R.id.navList);
+        listView= findViewById(R.id.navList);
         navigationManager= FragmentNavigationManager.getmInstance(this);
 
         initItems();
 
         View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
-        expandableListView.addHeaderView(listHeaderView);
+        listView.addHeaderView(listHeaderView);
 
         TextView textView = findViewById(R.id.textViewNombre);
         textView.setText(user_nombre);
@@ -134,8 +141,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addDrawersItem() {
-        adapter = new CustomExpandableListAdapter(this,lstTitle,lstChild);
-        expandableListView.setAdapter(adapter);
+
+        elemenosMenu = new ArrayList<DrawerItem>();
+
+        elemenosMenu.add(new DrawerItem("e1", R.drawable.logotdt));
+        elemenosMenu.add(new DrawerItem("e2", R.drawable.logotdt));
+
+        //adapter = new CustomExpandableListAdapter(this,lstTitle,lstChild);
+        listView.setAdapter(new DrawerListAdapter(this, elemenosMenu));
+        //listView.setAdapter(adapter);
+
+
+        /*
+
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -151,26 +169,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 String selectedItem = ( (List) (lstChild.get(lstTitle.get(groupPosition))) )
                         .get(childPosition).toString();
-
-
-                /*
-                getSupportActionBar().setTitle(selectedItem);
-
-                if(items[0].equals(lstTitle.get(groupPosition)))
-                    navigationManager.showFragment(selectedItem);
-                else
-                    throw new IllegalArgumentException("Not supported fragmen");
-
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                */
-
-
 
 
                 String clave= lstTitle.get(groupPosition)  +"|"+selectedItem;
@@ -187,6 +192,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+        */
+
 
     }
 
@@ -215,18 +224,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void genData() {
-        List<String> title = Arrays.asList("Categorías","Amigos","Perfil");
 
-        List<String> categorias = Arrays.asList("Principal","Acción","Documentales","Fantasía","Infantiles","Romanticas","Terror","Otros");
-        List<String> amigos = Arrays.asList("Buscar","Mis amigos");
-        List<String> perfil = Arrays.asList("Mis datos","Historial","Cerrar sesión");
-
-        lstChild = new TreeMap<>();
-        lstChild.put(title.get(0),categorias);
-        lstChild.put(title.get(1),amigos);
-        lstChild.put(title.get(2),perfil);
-
-        lstTitle= new ArrayList<>(lstChild.keySet());
 
     }
 

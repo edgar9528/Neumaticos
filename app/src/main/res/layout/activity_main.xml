@@ -24,7 +24,7 @@
 
     </LinearLayout>
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/navList"
         android:layout_gravity="left|start"
         android:layout_width="235dp"
@@ -36,6 +36,6 @@
         >
 
 
-    </ExpandableListView>
+    </ListView>
 
 </android.support.v4.widget.DrawerLayout>

@@ -67,6 +67,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.logo);
 
+        ti_usuario.setText("edgar");
+        ti_contrasena.setText("edgar");
+
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +80,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
                         String command = "10|" + usuario + "|" + pass + "\u001a";
 
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                        /*
+
                         //Envia la peticion al socket, recibe respuesta en
                         //public void processFinish(String output)
                         ConexionSocket conexionSocket = new ConexionSocket();
@@ -84,6 +93,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         conexionSocket.context = LoginActivity.this;
                         conexionSocket.delegate = LoginActivity.this;
                         conexionSocket.execute();
+
+
+                         */
 
                     } else
                         Toast.makeText(LoginActivity.this, "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
