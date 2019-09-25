@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 
 import com.tdt.neumaticos.Adapter.CustomExpandableListAdapter;
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
+import com.tdt.neumaticos.Fragments.FragmentAmigos;
 import com.tdt.neumaticos.Helper.FragmentNavigationManager;
 import com.tdt.neumaticos.Interface.NavigationManager;
 import com.tdt.neumaticos.Model.DrawerItem;
@@ -46,11 +50,14 @@ public class MainActivity extends AppCompatActivity {
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
 
+    ArrayList<String> nombresMenu;
     ArrayList<DrawerItem> elemenosMenu;
+    String tituloActivo="";
 
     private ListView listView;
 
-    String user_id="",user_nombre="",user_correo="",user_contrasena="";
+    String usuario,contraseña;
+    int permisos;
 
     @Override
     public void onBackPressed() {
@@ -62,13 +69,10 @@ public class MainActivity extends AppCompatActivity {
         dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
 
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(intent);
+                finish();
 
-                /*finish();
-                System.exit(0);*/
             }
         });
         dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -92,27 +96,20 @@ public class MainActivity extends AppCompatActivity {
         listView= findViewById(R.id.navList);
         navigationManager= FragmentNavigationManager.getmInstance(this);
 
-        initItems();
 
         View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
         listView.addHeaderView(listHeaderView);
 
         TextView textView = findViewById(R.id.textViewNombre);
-        textView.setText(user_nombre);
-
-        genData();
+        textView.setText(usuario);
 
         addDrawersItem();
         setupDrawer();
 
         if(savedInstanceState== null)
         {
-            selectFirsItemAsDefault();
+            selectItem(0,elemenosMenu.get(0).getName());
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Categorías|Principal");
 
 
     }
@@ -143,59 +140,16 @@ public class MainActivity extends AppCompatActivity {
     private void addDrawersItem() {
 
         elemenosMenu = new ArrayList<DrawerItem>();
+        nombresMenu = new ArrayList<>();
+        nombresMenu.add("ejemplo1");
+        nombresMenu.add("ejemplo2");
 
-        elemenosMenu.add(new DrawerItem("e1", R.drawable.logotdt));
-        elemenosMenu.add(new DrawerItem("e2", R.drawable.logotdt));
+        elemenosMenu.add(new DrawerItem(nombresMenu.get(0), R.drawable.logotdt));
+        elemenosMenu.add(new DrawerItem(nombresMenu.get(1), R.drawable.logotdt));
 
-        //adapter = new CustomExpandableListAdapter(this,lstTitle,lstChild);
         listView.setAdapter(new DrawerListAdapter(this, elemenosMenu));
-        //listView.setAdapter(adapter);
 
-
-        /*
-
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                //set title for toolbar
-                //getSupportActionBar().setTitle(lstTitle.get(groupPosition).toString());
-            }
-        });
-
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                //getSupportActionBar().setTitle("Inicio");
-            }
-        });
-
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                String selectedItem = ( (List) (lstChild.get(lstTitle.get(groupPosition))) )
-                        .get(childPosition).toString();
-
-
-                String clave= lstTitle.get(groupPosition)  +"|"+selectedItem;
-                Log.d("Salida", clave);
-
-
-                getSupportActionBar().setTitle(clave);
-
-
-                navigationManager.showFragment(clave);
-
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-
-                return false;
-            }
-        });
-
-
-        */
-
+        listView.setOnItemClickListener(new DrawerItemClickListener());
 
     }
 
@@ -205,57 +159,85 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle("Inicio2");
+                getSupportActionBar().setTitle("Menú");
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                //getSupportActionBar().setTitle(mActivityTitle);
+                getSupportActionBar().setTitle(tituloActivo);
                 invalidateOptionsMenu();
             }
         };
 
-
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-    }
-
-    private void genData() {
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
     }
-
-    private void initItems() {
-        items = new String[]{"Android Programing","Xamarin Programing","iOS Programing"};
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if(mDrawerToggle.onOptionsItemSelected(item))
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            // Toma los eventos de selección del toggle aquí
             return true;
-
+        }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /* La escucha del ListView en el Drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String titulo = elemenosMenu.get(position-1).getName();
+            selectItem(position,titulo);
+        }
+    }
+
+    private void selectItem(int position,String titulo) {
+        //Remplazar los fragmentos
+
+        listView.setItemChecked(position, true);
+        getSupportActionBar().setTitle(titulo);
+
+        tituloActivo=titulo;
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = null;
+        ft= fm.beginTransaction().replace(R.id.container,FragmentAmigos.newInstance(titulo,titulo));
+
+        ft.addToBackStack(null);
+        if(false  || !BuildConfig.DEBUG)
+            ft.commitAllowingStateLoss();
+        else
+            ft.commit();
+        fm.executePendingTransactions();
+
+        mDrawerLayout.closeDrawer(listView);
+
+    }
+
 
     public void obtenerUsuario()
     {
         SharedPreferences sharedPref = getSharedPreferences("LoginPreferences",Context.MODE_PRIVATE);
-        user_id = sharedPref.getString("user_id","null");
-        user_nombre = sharedPref.getString("user_nombre","null");
-        user_correo = sharedPref.getString("user_correo","null");
-        user_contrasena = sharedPref.getString("user_contrasena","null");
+        usuario = sharedPref.getString("usuario","null");
+        contraseña = sharedPref.getString("pass","null");
+        permisos = Integer.parseInt( sharedPref.getString("permisos","0") );
     }
+
+
+
 
 }
