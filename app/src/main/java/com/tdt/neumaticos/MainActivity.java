@@ -8,47 +8,28 @@ import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.tdt.neumaticos.Adapter.CustomExpandableListAdapter;
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
 import com.tdt.neumaticos.Fragments.FragmentAmigos;
-import com.tdt.neumaticos.Helper.FragmentNavigationManager;
-import com.tdt.neumaticos.Interface.NavigationManager;
 import com.tdt.neumaticos.Model.DrawerItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String mActivityTitle;
-    private String[] items;
-
-    //private ExpandableListView expandableListView;
-    private ExpandableListAdapter adapter;
-    private List<String> lstTitle;
-    private Map<String,List<String>> lstChild;
-    private NavigationManager navigationManager;
 
     ArrayList<String> nombresMenu;
     ArrayList<DrawerItem> elemenosMenu;
@@ -92,10 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         //init view
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle= getTitle().toString();
         listView= findViewById(R.id.navList);
-        navigationManager= FragmentNavigationManager.getmInstance(this);
-
 
         View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
         listView.addHeaderView(listHeaderView);
@@ -126,15 +104,6 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    private void selectFirsItemAsDefault() {
-        if(navigationManager!= null)
-        {
-            String firtsItem = "Categorías|Principal";
-            navigationManager.showFragment(firtsItem);
-            getSupportActionBar().setTitle(firtsItem);
-        }
     }
 
     private void addDrawersItem() {
@@ -238,8 +207,5 @@ public class MainActivity extends AppCompatActivity {
         contraseña = sharedPref.getString("pass","null");
         permisos = Integer.parseInt( sharedPref.getString("permisos","0") );
     }
-
-
-
 
 }
