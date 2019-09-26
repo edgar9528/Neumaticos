@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
 import com.tdt.neumaticos.Fragments.AltaFragment;
@@ -77,26 +78,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        obtenerUsuario();
+        try {
 
-        //init view
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        listView= findViewById(R.id.navList);
+            obtenerUsuario();
 
-        View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
-        listView.addHeaderView(listHeaderView);
+            //init view
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            listView = findViewById(R.id.navList);
 
-        TextView textView = findViewById(R.id.textViewNombre);
-        textView.setText(usuario);
+            View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header, null, false);
+            listView.addHeaderView(listHeaderView);
 
-        addDrawersItem();
-        setupDrawer();
+            TextView textView = findViewById(R.id.textViewNombre);
+            textView.setText(usuario);
 
-        if(savedInstanceState== null)
-        {
-            selectItem(0,elementosMenu.get(0).getName());
+            addDrawersItem();
+            setupDrawer();
+
+            if (savedInstanceState == null) {
+                selectItem(0, elementosMenu.get(0).getName());
+            }
         }
-
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Eror: "+e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -118,7 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
         elementosMenu = new ArrayList<DrawerItem>();
         String nombresMenu[] ={"Alta","Montaje","Configuración","Mantenimiento","Cambia ubicación","Baja","Salida","Entrada"};
-        int iconos[] = {R.drawable.ic_file_download};
+        int iconos[] = {R.drawable.ic_file_upload,R.drawable.ic_montaje,R.drawable.ic_config,R.drawable.ic_action_shield,
+                        R.drawable.ic_cambia,R.drawable.ic_file_download,R.drawable.ic_salida,R.drawable.ic_entrada};
 
         permisos=255;
 
@@ -126,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if( (permisos&b)==b)
             {
-                elementosMenu.add(new DrawerItem(nombresMenu[i], iconos[0]));
+                elementosMenu.add(new DrawerItem(nombresMenu[i], iconos[i]));
             }
         }
 
@@ -191,40 +198,64 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position,String titulo) {
         //Remplazar los fragmentos
 
-        listView.setItemChecked(position, true);
-        getSupportActionBar().setTitle(titulo);
+        try {
 
-        tituloActivo=titulo;
+            listView.setItemChecked(position, true);
+            getSupportActionBar().setTitle(titulo);
+
+            tituloActivo = titulo;
 
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = null;
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = null;
 
-        Fragment fragment;
+            Fragment fragment;
 
-        switch (position)
-        {
-            case 1: fragment= new AltaFragment(); break;
-            case 2: fragment= new MontajeFragment(); break;
-            case 3: fragment= new ConfiguracionFragment(); break;
-            case 4: fragment= new MantenimientoFragment(); break;
-            case 5: fragment= new CambiaubiFragment(); break;
-            case 6: fragment= new BajaFragment(); break;
-            case 7: fragment= new SalidaFragment(); break;
-            case 8: fragment= new EntradaFragment(); break;
-            default: fragment= new AltaFragment(); break;
+            switch (position) {
+                case 1:
+                    fragment = new AltaFragment();
+                    break;
+                case 2:
+                    fragment = new MontajeFragment();
+                    break;
+                case 3:
+                    fragment = new ConfiguracionFragment();
+                    break;
+                case 4:
+                    fragment = new MantenimientoFragment();
+                    break;
+                case 5:
+                    fragment = new CambiaubiFragment();
+                    break;
+                case 6:
+                    fragment = new BajaFragment();
+                    break;
+                case 7:
+                    fragment = new SalidaFragment();
+                    break;
+                case 8:
+                    fragment = new EntradaFragment();
+                    break;
+                default:
+                    fragment = new AltaFragment();
+                    break;
+            }
+
+            ft = fm.beginTransaction().replace(R.id.container, fragment);
+
+            ft.addToBackStack(null);
+            if (false || !BuildConfig.DEBUG)
+                ft.commitAllowingStateLoss();
+            else
+                ft.commit();
+            fm.executePendingTransactions();
+
+            mDrawerLayout.closeDrawer(listView);
         }
-
-        ft= fm.beginTransaction().replace(R.id.container,fragment);
-
-        ft.addToBackStack(null);
-        if(false  || !BuildConfig.DEBUG)
-            ft.commitAllowingStateLoss();
-        else
-            ft.commit();
-        fm.executePendingTransactions();
-
-        mDrawerLayout.closeDrawer(listView);
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
