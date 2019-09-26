@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,9 +25,15 @@ import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 
+import java.io.BufferedInputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AltaFragment extends Fragment {
+public class AltaFragment extends Fragment implements AsyncResponse{
 
     private static final String PARAMETRO="codigo";
     private static String codigo;
@@ -36,13 +44,15 @@ public class AltaFragment extends Fragment {
     final int mes = c.get(Calendar.MONTH);
     final int dia = c.get(Calendar.DAY_OF_MONTH);
     final int anio = c.get(Calendar.YEAR);
+    private int peticion=0;
 
-    Activity activity;
-
-    String str_marcas,str_almacenes;
+    ArrayList<String> marcas,marcas_id,almacenes,almacenes_id;
 
     TextInputEditText[] textInputs;
     Spinner spinner_marca,spinner_ubicacion;
+    Button button_terminar;
+
+
 
     public AltaFragment() {
         // Required empty public constructor
@@ -61,8 +71,8 @@ public class AltaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        activity = (MainActivity) getActivity();
         final View view = inflater.inflate(R.layout.fragment_alta, container, false);
+
 
         TextView tv_alta = view.findViewById(R.id.tv_alta);
         textInputs = new TextInputEditText[8];
@@ -76,8 +86,10 @@ public class AltaFragment extends Fragment {
         textInputs[7] = view.findViewById(R.id.ti_dibujo);
         spinner_marca = view.findViewById(R.id.spinner_marca);
         spinner_ubicacion = view.findViewById(R.id.spinner_ubicacion);
+        button_terminar = view.findViewById(R.id.button_terminar1);
 
-        obtenerInfoSpinners();
+        tv_alta.setText("Código: "+codigo);
+        obtenerInfoSpinnerMarcas();
 
         textInputs[1].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +105,14 @@ public class AltaFragment extends Fragment {
             }
         });
 
+        button_terminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        tv_alta.setText("Código: "+codigo);
+
+            }
+        });
+
 
         return view;
     }
@@ -130,10 +148,83 @@ public class AltaFragment extends Fragment {
 
     }
 
-    public void obtenerInfoSpinners()
+    public void obtenerInfoSpinnerMarcas()
     {
+        String command = "03"+"\u001a";
 
+        ConexionSocket conexionSocket = new ConexionSocket();
+        conexionSocket.command = command;
+        conexionSocket.context = AltaFragment.this.getActivity();
+        conexionSocket.delegate = this;
+        conexionSocket.execute();
 
     }
+
+    public void obtenerInfoSpinnerAlmacen()
+    {
+        String command = "04"+"\u001a";
+
+        ConexionSocket conexionSocket2 = new ConexionSocket();
+        conexionSocket2.command = command;
+        conexionSocket2.context = AltaFragment.this.getActivity();
+        conexionSocket2.delegate = this;
+        conexionSocket2.execute();
+    }
+
+
+    @Override
+    public void processFinish(String output){
+
+        try
+        {
+            String clave = output.substring(0,2);
+            String mensaje = output.substring(2,output.length());
+            mensaje=mensaje.trim(); // elimina espacios en blanco al principio y final
+
+            if(clave.equals("BC"))
+            {
+                String[] resultado = mensaje.split(",");
+
+                if(peticion==0)
+                {
+                    marcas = new ArrayList<>();
+                    marcas_id = new ArrayList<>();
+
+                    for (int i = 0; i < resultado.length; i = i + 2) {
+                        marcas_id.add(resultado[i]);
+                        marcas.add(resultado[i + 1]);
+                    }
+
+                    spinner_marca.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, marcas));
+                    peticion++;
+
+                    obtenerInfoSpinnerAlmacen();
+                }
+                else
+                {
+                    almacenes = new ArrayList<>();
+                    almacenes_id = new ArrayList<>();
+
+                    for (int i = 0; i < resultado.length; i = i + 2) {
+                        almacenes_id.add(resultado[i]);
+                        almacenes.add(resultado[i + 1]);
+                    }
+
+                    spinner_ubicacion.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
+                }
+
+            }
+            else
+            {
+                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
 }

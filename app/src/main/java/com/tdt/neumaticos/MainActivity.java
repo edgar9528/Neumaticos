@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
+import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Fragments.AltaFragment;
 import com.tdt.neumaticos.Fragments.BajaFragment;
 import com.tdt.neumaticos.Fragments.CambiaubiFragment;
@@ -129,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         int iconos[] = {R.drawable.ic_file_upload,R.drawable.ic_montaje,R.drawable.ic_config,R.drawable.ic_action_shield,
                         R.drawable.ic_cambia,R.drawable.ic_file_download,R.drawable.ic_salida,R.drawable.ic_entrada};
 
-        permisos=255;
 
         for(int i=0,b=1;i<8;i++,b=b+b)
         {

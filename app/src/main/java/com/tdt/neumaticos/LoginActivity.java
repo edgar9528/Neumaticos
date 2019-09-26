@@ -80,13 +80,13 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
                         String command = "10|" + usuario + "|" + pass + "\u001a";
 
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
-                        finish();
+                        finish();*/
 
-                        /*
 
-                        //Envia la peticion al socket, recibe respuesta en
+
+                        //Envia la peticion al socket, recibe respuesta (delegate) en
                         //public void processFinish(String output)
                         ConexionSocket conexionSocket = new ConexionSocket();
                         conexionSocket.command = command;
@@ -94,8 +94,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         conexionSocket.delegate = LoginActivity.this;
                         conexionSocket.execute();
 
-
-                         */
 
                     } else
                         Toast.makeText(LoginActivity.this, "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();

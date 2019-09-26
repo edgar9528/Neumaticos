@@ -1,5 +1,6 @@
 package com.tdt.neumaticos.Fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +32,7 @@ public class LeercodigoFragment extends Fragment {
                              Bundle savedInstanceState) {
         MainActivity activity = (MainActivity) getActivity();
         tipo= activity.getDataFragmento();
+
 
         final View view = inflater.inflate(R.layout.fragment_leercodigo, container, false);
 
