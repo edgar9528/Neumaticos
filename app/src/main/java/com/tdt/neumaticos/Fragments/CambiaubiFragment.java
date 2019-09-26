@@ -11,8 +11,21 @@ import com.tdt.neumaticos.R;
 
 public class CambiaubiFragment extends Fragment {
 
+    private static final String PARAMETRO="codigo";
+    private static String codigo;
+
     public CambiaubiFragment() {
         // Required empty public constructor
+    }
+
+    public static CambiaubiFragment newInstance (String cod)
+    {
+        CambiaubiFragment fragment = new CambiaubiFragment();
+        Bundle args = new Bundle();
+        args.putString(PARAMETRO,cod);
+        codigo=cod;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -22,7 +35,7 @@ public class CambiaubiFragment extends Fragment {
 
         TextView tv_alta = view.findViewById(R.id.tv_cambiaubi);
 
-        tv_alta.setText("Hola, soy el fragment CAMBIA UBICACION");
+        tv_alta.setText("Hola, soy el fragment CAMBIA UBICACION"+codigo);
 
 
         return view;

@@ -29,6 +29,7 @@ import com.tdt.neumaticos.Fragments.BajaFragment;
 import com.tdt.neumaticos.Fragments.CambiaubiFragment;
 import com.tdt.neumaticos.Fragments.ConfiguracionFragment;
 import com.tdt.neumaticos.Fragments.EntradaFragment;
+import com.tdt.neumaticos.Fragments.LeercodigoFragment;
 import com.tdt.neumaticos.Fragments.MantenimientoFragment;
 import com.tdt.neumaticos.Fragments.MontajeFragment;
 import com.tdt.neumaticos.Fragments.SalidaFragment;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     String tituloActivo="";
 
     private ListView listView;
+    private String dato;
 
     String usuario,contraseña;
     int permisos;
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             setupDrawer();
 
             if (savedInstanceState == null) {
-                selectItem(0, elementosMenu.get(0).getName());
+                selectItem(1, elementosMenu.get(0).getName());
             }
         }
         catch (Exception e)
@@ -213,7 +215,8 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 1:
-                    fragment = new AltaFragment();
+                    dato="Alta";
+                    fragment = new LeercodigoFragment();
                     break;
                 case 2:
                     fragment = new MontajeFragment();
@@ -225,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MantenimientoFragment();
                     break;
                 case 5:
-                    fragment = new CambiaubiFragment();
+                    dato="Cambia";
+                    fragment = new LeercodigoFragment();
                     break;
                 case 6:
                     fragment = new BajaFragment();
@@ -237,7 +241,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new EntradaFragment();
                     break;
                 default:
-                    fragment = new AltaFragment();
+                    dato="Alta";
+                    fragment = new LeercodigoFragment();
                     break;
             }
 
@@ -259,6 +264,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public String getDataFragmento()
+    {
+        return dato;
+    }
 
     public void obtenerUsuario()
     {
