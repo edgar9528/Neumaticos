@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
+import com.tdt.neumaticos.Clases.RevisasTextos;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 
@@ -108,7 +110,16 @@ public class AltaFragment extends Fragment implements AsyncResponse{
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RevisasTextos revisasTextos = new RevisasTextos();
 
+                if(revisasTextos.llenos(textInputs))
+                {
+                    Toast.makeText(getContext(), "Campos llenos", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
