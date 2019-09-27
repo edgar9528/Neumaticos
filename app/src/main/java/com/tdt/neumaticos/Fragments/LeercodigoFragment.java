@@ -5,20 +5,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.neumaticos.BuildConfig;
+import com.tdt.neumaticos.Clases.AsyncResponse;
+import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 
-public class LeercodigoFragment extends Fragment {
+import java.util.ArrayList;
+
+public class LeercodigoFragment extends Fragment implements AsyncResponse {
 
     String tipo,codigo;
+    String ubicacion,ubicacion_id;
 
     TextView tv_mensaje,tv_codigo;
     Button button_codigo;
@@ -49,12 +56,69 @@ public class LeercodigoFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                codigo="COD123";
-                cambiarFragment();
+                codigo="CODPRUEBA2";
+
+                verificaCodigo();
             }
         });
 
         return view;
+    }
+
+    public void verificaCodigo()
+    {
+        String command;
+
+        if(tipo.equals("Alta"))
+        {
+            command = "08|"+codigo+"\u001a";
+        }
+        else
+        {
+            command = "11|"+codigo+"\u001a";
+        }
+
+        ConexionSocket conexionSocket2 = new ConexionSocket();
+        conexionSocket2.command = command;
+        conexionSocket2.context = LeercodigoFragment.this.getActivity();
+        conexionSocket2.delegate = this;
+        conexionSocket2.execute();
+
+    }
+
+
+    @Override
+    public void processFinish(String output){
+        try
+        {
+            String clave = output.substring(0,2);
+            String mensaje = output.substring(2,output.length());
+            mensaje=mensaje.trim(); // elimina espacios en blanco al principio y final
+
+            if(clave.equals("BC"))
+            {
+                if(tipo.equals("Alta"))
+                {
+                    cambiarFragment();
+                }
+                else
+                {
+                    String[] resultado = mensaje.split(",");
+                    ubicacion_id= resultado[0];
+                    ubicacion=resultado[1];
+                    cambiarFragment();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void cambiarFragment()
@@ -65,7 +129,7 @@ public class LeercodigoFragment extends Fragment {
         if(tipo.equals("Alta"))
             ft = fm.beginTransaction().replace(R.id.container, AltaFragment.newInstance(codigo) );
         else
-            ft = fm.beginTransaction().replace(R.id.container, CambiaubiFragment.newInstance(codigo) );
+            ft = fm.beginTransaction().replace(R.id.container, CambiaubiFragment.newInstance(codigo,ubicacion,ubicacion_id) );
 
         ft.addToBackStack(null);
         if (false || !BuildConfig.DEBUG)

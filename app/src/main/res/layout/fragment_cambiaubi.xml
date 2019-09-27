@@ -4,10 +4,125 @@
     android:layout_height="match_parent"
     tools:context="com.tdt.neumaticos.Fragments.CambiaubiFragment">
 
-    <TextView
-        android:id="@+id/tv_cambiaubi"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Alta fragment" />
+        android:padding="@dimen/paddingGeneral"
+        >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tag:"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="@dimen/paddingControles"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_tag1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Texto ejemplo"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="@dimen/paddingControles"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tag:"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="@dimen/paddingControles"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_ubiActual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Texto ejemplo"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="@dimen/paddingControles"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Almacen destino:"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="2dp"
+                    />
+
+                <Spinner
+                    android:id="@+id/spinner_ubicacion1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/paddingControles"
+                    >
+                </Spinner>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:paddingBottom="@dimen/paddingControles"
+                    android:paddingTop="@dimen/paddingControles"
+                    >
+
+                    <Button
+                        android:id="@+id/button_cancelar2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cancelar"
+                        android:theme="@style/RaisedButtonDark"
+                        />
+
+                    <Button
+                        android:id="@+id/button_terminar2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Terminar"
+                        android:theme="@style/RaisedButtonDark"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
+
+    </LinearLayout>
 
 </FrameLayout>

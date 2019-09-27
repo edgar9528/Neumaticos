@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.Clases.RevisasTextos;
@@ -47,14 +51,13 @@ public class AltaFragment extends Fragment implements AsyncResponse{
     final int dia = c.get(Calendar.DAY_OF_MONTH);
     final int anio = c.get(Calendar.YEAR);
     private int peticion=0;
+    private String usuario;
 
     ArrayList<String> marcas,marcas_id,almacenes,almacenes_id;
 
     TextInputEditText[] textInputs;
     Spinner spinner_marca,spinner_ubicacion;
-    Button button_terminar;
-
-
+    Button button_terminar,button_cancelar;
 
     public AltaFragment() {
         // Required empty public constructor
@@ -75,7 +78,6 @@ public class AltaFragment extends Fragment implements AsyncResponse{
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_alta, container, false);
 
-
         TextView tv_alta = view.findViewById(R.id.tv_alta);
         textInputs = new TextInputEditText[8];
         textInputs[0] = view.findViewById(R.id.ti_descripcion);
@@ -89,6 +91,8 @@ public class AltaFragment extends Fragment implements AsyncResponse{
         spinner_marca = view.findViewById(R.id.spinner_marca);
         spinner_ubicacion = view.findViewById(R.id.spinner_ubicacion);
         button_terminar = view.findViewById(R.id.button_terminar1);
+        button_cancelar = view.findViewById(R.id.button_cancelar1);
+        obtenerUsuario();
 
         tv_alta.setText("Código: "+codigo);
         obtenerInfoSpinnerMarcas();
@@ -114,13 +118,48 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
                 if(revisasTextos.llenos(textInputs))
                 {
-                    Toast.makeText(getContext(), "Campos llenos", Toast.LENGTH_LONG).show();
+                    ArrayList<String> datos = revisasTextos.obtenerStrings(textInputs);
+                    String id_marca = marcas_id.get((int)spinner_marca.getSelectedItemId() );
+                    String id_almacen = almacenes_id.get((int)spinner_ubicacion.getSelectedItemId() );
+
+                    String sep = "\u0009";
+
+                    datos.add(0,id_marca);
+                    datos.add(id_almacen);
+                    datos.add(0,codigo);
+                    datos.add(usuario);
+
+                    String comando="";
+
+                    for(int i=0; i<datos.size();i++)
+                    {
+                        if(i!=(datos.size()-1))
+                            comando=comando+datos.get(i)+sep;
+                        else
+                            comando=comando+datos.get(i);
+                    }
+
+                    String command = "05|" + comando +"\u001a";
+
+                    ConexionSocket conexionSocket2 = new ConexionSocket();
+                    conexionSocket2.command = command;
+                    conexionSocket2.context = AltaFragment.this.getActivity();
+                    conexionSocket2.delegate = AltaFragment.this;
+                    conexionSocket2.execute();
+
                 }
                 else
                 {
                     Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
                 }
 
+            }
+        });
+
+        button_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goFragmentAnterior();
             }
         });
 
@@ -212,30 +251,68 @@ public class AltaFragment extends Fragment implements AsyncResponse{
                     obtenerInfoSpinnerAlmacen();
                 }
                 else
-                {
-                    almacenes = new ArrayList<>();
-                    almacenes_id = new ArrayList<>();
+                    if(peticion==1)
+                    {
+                        almacenes = new ArrayList<>();
+                        almacenes_id = new ArrayList<>();
 
-                    for (int i = 0; i < resultado.length; i = i + 2) {
-                        almacenes_id.add(resultado[i]);
-                        almacenes.add(resultado[i + 1]);
+                        for (int i = 0; i < resultado.length; i = i + 2) {
+                            almacenes_id.add(resultado[i]);
+                            almacenes.add(resultado[i + 1]);
+                        }
+
+                        spinner_ubicacion.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
+                        peticion++;
                     }
-
-                    spinner_ubicacion.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
-                }
-
+                    else
+                    {
+                        Toast.makeText(getContext(), "La llanta ha sido agregada", Toast.LENGTH_LONG).show();
+                        goFragmentAnterior();
+                    }
             }
             else
             {
                 Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                goFragmentAnterior();
             }
         }
         catch (Exception e)
         {
             Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+            goFragmentAnterior();
         }
 
     }
 
+    public void goFragmentAnterior()
+    {
+        try
+        {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = null;
+
+            Fragment fragment;
+            fragment = new LeercodigoFragment();
+
+            ft = fm.beginTransaction().replace(R.id.container, fragment);
+
+            ft.addToBackStack(null);
+            if (false || !BuildConfig.DEBUG)
+                ft.commitAllowingStateLoss();
+            else
+                ft.commit();
+            fm.executePendingTransactions();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void obtenerUsuario()
+    {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("LoginPreferences",Context.MODE_PRIVATE);
+        usuario = sharedPref.getString("usuario","null");
+    }
 
 }

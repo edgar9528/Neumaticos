@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private String dato;
 
-    String usuario,contraseña;
+    public String usuario,contraseña;
     int permisos;
 
     @Override
