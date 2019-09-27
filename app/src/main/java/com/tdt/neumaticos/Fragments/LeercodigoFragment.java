@@ -50,7 +50,11 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         if(tipo.equals("Alta"))
             tv_mensaje.setText("dar de alta");
         else
+        if(tipo.equals("Cambia"))
             tv_mensaje.setText("cambiar ubicación");
+        else
+        if(tipo.equals("Baja"))
+            tv_mensaje.setText("dar de baja");
 
         button_codigo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,16 +71,14 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
 
     public void verificaCodigo()
     {
-        String command;
+        String command="";
 
         if(tipo.equals("Alta"))
-        {
             command = "08|"+codigo+"\u001a";
-        }
         else
-        {
+        if(tipo.equals("Cambia")|| tipo.equals("Baja"))
             command = "11|"+codigo+"\u001a";
-        }
+
 
         ConexionSocket conexionSocket2 = new ConexionSocket();
         conexionSocket2.command = command;
@@ -102,6 +104,15 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                     cambiarFragment();
                 }
                 else
+                if(tipo.equals("Cambia"))
+                {
+                    String[] resultado = mensaje.split(",");
+                    ubicacion_id= resultado[0];
+                    ubicacion=resultado[1];
+                    cambiarFragment();
+                }
+                else
+                if(tipo.equals("Baja"))
                 {
                     String[] resultado = mensaje.split(",");
                     ubicacion_id= resultado[0];
@@ -129,7 +140,11 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         if(tipo.equals("Alta"))
             ft = fm.beginTransaction().replace(R.id.container, AltaFragment.newInstance(codigo) );
         else
+        if(tipo.equals("Cambia"))
             ft = fm.beginTransaction().replace(R.id.container, CambiaubiFragment.newInstance(codigo,ubicacion,ubicacion_id) );
+        else
+        if(tipo.equals("Baja"))
+            ft = fm.beginTransaction().replace(R.id.container, BajaFragment.newInstance(codigo,ubicacion,ubicacion_id) );
 
         ft.addToBackStack(null);
         if (false || !BuildConfig.DEBUG)

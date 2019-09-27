@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private String dato;
 
-    public String usuario,contraseña;
+    String usuario,contraseña;
     int permisos;
 
     @Override
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             obtenerUsuario();
+            permisos=255;
 
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -233,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new LeercodigoFragment();
                     break;
                 case 6:
-                    fragment = new BajaFragment();
+                    dato="Baja";
+                    fragment = new LeercodigoFragment();
                     break;
                 case 7:
                     fragment = new SalidaFragment();
