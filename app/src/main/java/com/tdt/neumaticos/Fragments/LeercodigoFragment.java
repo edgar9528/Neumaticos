@@ -1,15 +1,12 @@
 package com.tdt.neumaticos.Fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +16,6 @@ import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
-
-import java.util.ArrayList;
 
 public class LeercodigoFragment extends Fragment implements AsyncResponse {
 
@@ -155,10 +150,10 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
             ft = fm.beginTransaction().replace(R.id.container, CambiaubiFragment.newInstance(codigo,ubicacion,ubicacion_id) );
         else
         if(tipo.equals("Baja"))
-            ft = fm.beginTransaction().replace(R.id.container, BajaFragment.newInstance(codigo,ubicacion,ubicacion_id) );
+            ft = fm.beginTransaction().replace(R.id.container, BajamatenimientoFragment.newInstance(codigo,ubicacion,ubicacion_id) );
         else
         if(tipo.equals("Mantenimiento"))
-            ft = fm.beginTransaction().replace(R.id.container, BajaFragment.newInstance(codigo,ubicacion,ubicacion_id) );
+            ft = fm.beginTransaction().replace(R.id.container, BajamatenimientoFragment.newInstance(codigo,ubicacion,ubicacion_id) );
 
         ft.addToBackStack(null);
         if (false || !BuildConfig.DEBUG)

@@ -1,14 +1,11 @@
 package com.tdt.neumaticos.Fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
-import com.tdt.neumaticos.LoginActivity;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 
@@ -31,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class BajaFragment extends Fragment implements AsyncResponse {
+public class BajamatenimientoFragment extends Fragment implements AsyncResponse {
 
     private static final String PARAMETRO="codigo";
     private static String codigo;
@@ -49,13 +45,13 @@ public class BajaFragment extends Fragment implements AsyncResponse {
     TextView tv_titulo;
     Button button_terminar,button_cancelar;
 
-    public BajaFragment() {
+    public BajamatenimientoFragment() {
         // Required empty public constructor
     }
 
-    public static BajaFragment newInstance (String cod,String ubi,String ubi_id)
+    public static BajamatenimientoFragment newInstance (String cod, String ubi, String ubi_id)
     {
-        BajaFragment fragment = new BajaFragment();
+        BajamatenimientoFragment fragment = new BajamatenimientoFragment();
         Bundle args = new Bundle();
         args.putString(PARAMETRO,cod);
         codigo=cod;
@@ -72,7 +68,7 @@ public class BajaFragment extends Fragment implements AsyncResponse {
         MainActivity activity = (MainActivity) getActivity();
         tipo= activity.getDataFragmento();
         usuario=activity.getUsuarioActivity();
-        final View view = inflater.inflate(R.layout.fragment_baja, container, false);
+        final View view = inflater.inflate(R.layout.fragment_bajamantenimiento, container, false);
 
         tv_titulo = view.findViewById(R.id.tv_titulo);
         button_cancelar = view.findViewById(R.id.button_cancelar3);
@@ -176,8 +172,8 @@ public class BajaFragment extends Fragment implements AsyncResponse {
     {
         ConexionSocket conexionSocket = new ConexionSocket();
         conexionSocket.command = command;
-        conexionSocket.context = BajaFragment.this.getActivity();
-        conexionSocket.delegate = BajaFragment.this;
+        conexionSocket.context = BajamatenimientoFragment.this.getActivity();
+        conexionSocket.delegate = BajamatenimientoFragment.this;
         conexionSocket.execute();
     }
 
@@ -196,7 +192,7 @@ public class BajaFragment extends Fragment implements AsyncResponse {
 
         ConexionSocket conexionSocket = new ConexionSocket();
         conexionSocket.command = command;
-        conexionSocket.context = BajaFragment.this.getActivity();
+        conexionSocket.context = BajamatenimientoFragment.this.getActivity();
         conexionSocket.delegate = this;
         conexionSocket.execute();
     }
