@@ -43,7 +43,7 @@ public class BajaFragment extends Fragment implements AsyncResponse {
     private boolean seleccionado=false;
     private String bajaMante;
     private String bajaMante_id;
-    private String tipo;
+    private String tipo,usuario;
     private int peticion=0;
 
     TextView tv_titulo;
@@ -71,6 +71,7 @@ public class BajaFragment extends Fragment implements AsyncResponse {
 
         MainActivity activity = (MainActivity) getActivity();
         tipo= activity.getDataFragmento();
+        usuario=activity.getUsuarioActivity();
         final View view = inflater.inflate(R.layout.fragment_baja, container, false);
 
         tv_titulo = view.findViewById(R.id.tv_titulo);
@@ -79,15 +80,11 @@ public class BajaFragment extends Fragment implements AsyncResponse {
 
 
         if(tipo.equals("Baja"))
-        {
             tv_titulo.setText("Motivo para dar de baja");
-            peticionSocket();
-        }
         else
-        {
             tv_titulo.setText("Motivo para dar mantenimiento");
-            peticionSocket();
-        }
+
+        peticionSocket();
 
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,13 +103,16 @@ public class BajaFragment extends Fragment implements AsyncResponse {
                     SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
                     String hora = horaFormat.format(new Date());
 
+                    String fechaHora = fecha+" "+hora;
+
                     if(tipo.equals("Baja"))
                     {
-                        command = "18" + "\u001a";
+
+                        command = "19|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + ubicacion + "|" + usuario +"\u001a";
 
                         titulo="Se dará de baja";
 
-                        mensaje="Neumátio: "+codigo+"\n"
+                        mensaje="Neumático: "+codigo+"\n"
                                 +"Ubicación: "+ubicacion_id+"-"+ubicacion+"\n"
                                 +"Motivo: \n"+bajaMante+"\n"
                                 +"El día: "+fecha+"\n"
@@ -121,18 +121,19 @@ public class BajaFragment extends Fragment implements AsyncResponse {
                     }
                     else
                     {
-                        command = "18" + "\u001a";
+                        command = "17|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + bajaMante + "|" + usuario +"\u001a";
+
+                        titulo="Se dará el mantenimiento";
+
+                        mensaje="Neumático: "+codigo+"\n"
+                                +"Ubicación: "+ubicacion_id+"-"+ubicacion+"\n"
+                                +"Motivo: \n"+bajaMante+"\n"
+                                +"El día: "+fecha+"\n"
+                                +"A las: "+hora+"\n\n"
+                                +"¿Desea continuar?";
                     }
 
-
-                    if(confirmacion(mensaje,titulo))
-                    {
-                        ConexionSocket conexionSocket = new ConexionSocket();
-                        conexionSocket.command = command;
-                        conexionSocket.context = BajaFragment.this.getActivity();
-                        conexionSocket.delegate = BajaFragment.this;
-                        conexionSocket.execute();
-                    }
+                    mensajeConfirmacion(mensaje,titulo,command);
 
                 }
                 else
@@ -152,26 +153,32 @@ public class BajaFragment extends Fragment implements AsyncResponse {
         return view;
     }
 
-    public boolean confirmacion(String mensaje,String titulo)
+    public void mensajeConfirmacion(String mensaje, String titulo, final String command)
     {
-        final boolean[] aceptar = {false};
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
         dialogo1.setTitle(titulo);
         dialogo1.setMessage(mensaje);
         dialogo1.setCancelable(false);
         dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-                aceptar[0] =true;
+                actualizaEstado(command);
             }
         });
         dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-                aceptar[0] =false;
             }
         });
         dialogo1.show();
 
-        return aceptar[0];
+    }
+
+    public void actualizaEstado(String command)
+    {
+        ConexionSocket conexionSocket = new ConexionSocket();
+        conexionSocket.command = command;
+        conexionSocket.context = BajaFragment.this.getActivity();
+        conexionSocket.delegate = BajaFragment.this;
+        conexionSocket.execute();
     }
 
     public void peticionSocket()
@@ -184,7 +191,7 @@ public class BajaFragment extends Fragment implements AsyncResponse {
         }
         else
         {
-            command = "03"+"\u001a";
+            command = "16"+"\u001a";
         }
 
         ConexionSocket conexionSocket = new ConexionSocket();
@@ -222,11 +229,13 @@ public class BajaFragment extends Fragment implements AsyncResponse {
                 {
                     if(tipo.equals("Baja"))
                     {
-
+                        Toast.makeText(getContext(), "Dado de baja", Toast.LENGTH_LONG).show();
+                        goFragmentAnterior();
                     }
                     else
                     {
-
+                        Toast.makeText(getContext(), "Mantenimiento agregado", Toast.LENGTH_LONG).show();
+                        goFragmentAnterior();
                     }
                 }
 

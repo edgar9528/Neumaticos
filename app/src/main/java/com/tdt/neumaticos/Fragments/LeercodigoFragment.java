@@ -55,6 +55,9 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         else
         if(tipo.equals("Baja"))
             tv_mensaje.setText("dar de baja");
+        else
+        if(tipo.equals("Mantenimiento"))
+            tv_mensaje.setText("dar mantenimiento");
 
         button_codigo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +79,7 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         if(tipo.equals("Alta"))
             command = "08|"+codigo+"\u001a";
         else
-        if(tipo.equals("Cambia")|| tipo.equals("Baja"))
+        if(tipo.equals("Cambia")|| tipo.equals("Baja")||tipo.equals("Mantenimiento"))
             command = "11|"+codigo+"\u001a";
 
 
@@ -119,6 +122,14 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                     ubicacion=resultado[1];
                     cambiarFragment();
                 }
+                else
+                if(tipo.equals("Mantenimiento"))
+                {
+                    String[] resultado = mensaje.split(",");
+                    ubicacion_id= resultado[0];
+                    ubicacion=resultado[1];
+                    cambiarFragment();
+                }
             }
             else
             {
@@ -144,6 +155,9 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
             ft = fm.beginTransaction().replace(R.id.container, CambiaubiFragment.newInstance(codigo,ubicacion,ubicacion_id) );
         else
         if(tipo.equals("Baja"))
+            ft = fm.beginTransaction().replace(R.id.container, BajaFragment.newInstance(codigo,ubicacion,ubicacion_id) );
+        else
+        if(tipo.equals("Mantenimiento"))
             ft = fm.beginTransaction().replace(R.id.container, BajaFragment.newInstance(codigo,ubicacion,ubicacion_id) );
 
         ft.addToBackStack(null);

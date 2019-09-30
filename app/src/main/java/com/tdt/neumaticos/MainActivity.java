@@ -227,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ConfiguracionFragment();
                     break;
                 case 4:
-                    fragment = new MantenimientoFragment();
+                    dato="Mantenimiento";
+                    fragment = new LeercodigoFragment();
                     break;
                 case 5:
                     dato="Cambia";
@@ -270,6 +271,11 @@ public class MainActivity extends AppCompatActivity {
     public String getDataFragmento()
     {
         return dato;
+    }
+
+    public String getUsuarioActivity()
+    {
+        return usuario;
     }
 
     public void obtenerUsuario()
