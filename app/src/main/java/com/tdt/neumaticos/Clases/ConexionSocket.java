@@ -74,7 +74,7 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
                     con++;
                     for (int i = 0; i < buffer.length && buffer[i]!=0 ; ++ i)
                         buffer[i] =32;
-                    if(con==2)
+                    if(con==1)
                         break;
                 }
             }

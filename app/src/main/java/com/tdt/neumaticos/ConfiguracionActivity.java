@@ -39,6 +39,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 {
                     guardarServidor();
                     Toast.makeText(getApplicationContext(), "Información guardada", Toast.LENGTH_LONG).show();
+                    onBackPressed();
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();

@@ -33,25 +33,11 @@
                 android:value="com.tdt.neumaticos.LoginActivity" />
         </activity>
         <activity
-            android:name="com.tdt.neumaticos.DetallePeliculaActivity"
-            android:parentActivityName="com.tdt.neumaticos.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tdt.neumaticos.MainActivity" />
-        </activity>
-        <activity
             android:name=".ChatbotActivity"
             android:parentActivityName="com.tdt.neumaticos.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tdt.neumaticos.LoginActivity" />
-        </activity>
-
-        <activity android:name="com.tdt.neumaticos.PeliculasVistasActivity"
-            android:parentActivityName="com.tdt.neumaticos.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tdt.neumaticos.MainActivity" />
         </activity>
 
 

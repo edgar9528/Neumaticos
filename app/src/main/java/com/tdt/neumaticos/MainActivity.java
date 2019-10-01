@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,26 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Importante");
-        dialogo1.setMessage("¿Desea salir de la app?");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-        });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                //cancelar();
-            }
-        });
-        dialogo1.show();
+        cerrarSesion();
     }
 
     @Override
@@ -78,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             obtenerUsuario();
-            permisos=255;
 
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -121,9 +102,11 @@ public class MainActivity extends AppCompatActivity {
     private void addDrawersItem() {
 
         elementosMenu = new ArrayList<DrawerItem>();
-        String nombresMenu[] ={"Alta","Montaje","Configuración","Mantenimiento","Cambia ubicación","Baja","Salida","Entrada"};
+        String nombresMenu[] ={"Alta","Montaje","Configuración","Mantenimiento",
+                                "Cambia ubicación","Baja","Salida","Entrada","Cerrar sesión"};
         int iconos[] = {R.drawable.ic_file_upload,R.drawable.ic_montaje,R.drawable.ic_config,R.drawable.ic_action_shield,
-                        R.drawable.ic_cambia,R.drawable.ic_file_download,R.drawable.ic_salida,R.drawable.ic_entrada};
+                        R.drawable.ic_cambia,R.drawable.ic_file_download,R.drawable.ic_salida,R.drawable.ic_entrada,
+                        R.drawable.ic_exit_to_app};
 
 
         for(int i=0,b=1;i<8;i++,b=b+b)
@@ -133,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
                 elementosMenu.add(new DrawerItem(nombresMenu[i], iconos[i]));
             }
         }
+
+        elementosMenu.add(new DrawerItem(nombresMenu[nombresMenu.length-1], iconos[iconos.length-1]));
 
         listView.setAdapter(new DrawerListAdapter(this, elementosMenu));
 
@@ -188,8 +173,51 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String titulo = elementosMenu.get(position-1).getName();
-            selectItem(position,titulo);
+
+            if(!titulo.equals("Configuración")&&!titulo.equals("Cerrar sesión"))
+            {
+                //si no es la ventana de configuración
+                selectItem(position, titulo);
+                Log.d("salida",titulo);
+            }
+            else
+            {
+                if(titulo.equals("Configuración"))
+                {
+                    Intent intent = new Intent(MainActivity.this,ConfiguracionActivity.class);
+                    startActivity(intent);
+                    mDrawerLayout.closeDrawer(listView);
+                }
+                else
+                {
+                    cerrarSesion();
+                }
+            }
         }
+    }
+
+    private void cerrarSesion()
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle("Importante");
+        dialogo1.setMessage("¿Desea salir de la app?");
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+                mDrawerLayout.closeDrawer(listView);
+            }
+        });
+        dialogo1.show();
     }
 
     private void selectItem(int position,String titulo) {
@@ -202,39 +230,35 @@ public class MainActivity extends AppCompatActivity {
 
             tituloActivo = titulo;
 
-
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = null;
 
             Fragment fragment;
 
-            switch (position) {
-                case 1:
+            switch (titulo) {
+                case "Alta":
                     dato="Alta";
                     fragment = new LeercodigoFragment();
                     break;
-                case 2:
+                case "Montaje":
                     fragment = new MontajeFragment();
                     break;
-                case 3:
-                    fragment = new ConfiguracionFragment();
-                    break;
-                case 4:
+                case "Mantenimiento":
                     dato="Mantenimiento";
                     fragment = new LeercodigoFragment();
                     break;
-                case 5:
+                case "Cambia ubicación":
                     dato="Cambia";
                     fragment = new LeercodigoFragment();
                     break;
-                case 6:
+                case "Baja":
                     dato="Baja";
                     fragment = new LeercodigoFragment();
                     break;
-                case 7:
+                case "Salida":
                     fragment = new SalidaFragment();
                     break;
-                case 8:
+                case "Entrada":
                     fragment = new EntradaFragment();
                     break;
                 default:
