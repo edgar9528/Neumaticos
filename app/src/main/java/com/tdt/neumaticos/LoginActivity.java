@@ -28,8 +28,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     ImageView iv_logo;
 
-    Button button_leer;
-
     @Override
     public void onBackPressed() {
 
@@ -49,16 +47,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.logo);
 
-        button_leer = findViewById(R.id.button_leer);
-
-        button_leer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,RfidActivity.class);
-                startActivity(intent);
-            }
-        });
-
         //ti_usuario.setText("edgar");
         //ti_contrasena.setText("edgar");
 
@@ -76,8 +64,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();*/
-
-
 
                         //Envia la peticion al socket, recibe respuesta (delegate) en
                         //public void processFinish(String output)
@@ -170,6 +156,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         {
         }
     }
+
     public void verificarServidor()
     {
         SharedPreferences sharedPref = getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);

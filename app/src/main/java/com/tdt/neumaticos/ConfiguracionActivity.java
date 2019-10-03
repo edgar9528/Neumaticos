@@ -28,8 +28,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
         et_servidor = findViewById(R.id.et_servidor);
         et_puerto = findViewById(R.id.et_puerto);
 
-        button_guardar = findViewById(R.id.button_guardar);
-        button_regresar = findViewById(R.id.button_regresar);
+        button_guardar = findViewById(R.id.button_guardar_conf);
+        button_regresar = findViewById(R.id.button_regresar_conf);
 
         verificarServidor();
 
@@ -42,7 +42,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 {
                     guardarServidor();
                     Toast.makeText(getApplicationContext(), "Información guardada", Toast.LENGTH_LONG).show();
-                    onBackPressed();
+                    finish();
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
@@ -52,7 +52,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
         button_regresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
 

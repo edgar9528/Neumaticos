@@ -2,6 +2,7 @@ package com.tdt.neumaticos.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,25 @@ import com.tdt.neumaticos.R;
 
 public class EntradaFragment extends Fragment {
 
+    private static final String PARAMETRO="codigo";
+    private static String tipo;
+    private static String tipoVehiculo;
+    private static String ruta;
+
     public EntradaFragment() {
         // Required empty public constructor
+    }
+
+    public static EntradaFragment newInstance (String tip,String tipVehi, String rut)
+    {
+        EntradaFragment fragment = new EntradaFragment();
+        Bundle args = new Bundle();
+        args.putString(PARAMETRO,rut);
+        tipo=tip;
+        tipoVehiculo=tipVehi;
+        ruta=rut;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -22,7 +40,9 @@ public class EntradaFragment extends Fragment {
 
         TextView tv_alta = view.findViewById(R.id.tv_entrada);
 
-        tv_alta.setText("Hola, soy el fragment ENTRADA");
+        Log.d("salida","creado fragment entrada");
+
+        tv_alta.setText("ENTRADA"+tipo+" "+tipoVehiculo+" "+ruta);
 
 
         return view;

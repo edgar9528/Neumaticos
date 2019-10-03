@@ -26,9 +26,11 @@ import android.widget.Toast;
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
 import com.tdt.neumaticos.Fragments.ConfiguracionFragment;
 import com.tdt.neumaticos.Fragments.EntradaFragment;
+import com.tdt.neumaticos.Fragments.Leercod_entsalFragment;
 import com.tdt.neumaticos.Fragments.LeercodigoFragment;
 import com.tdt.neumaticos.Fragments.MontajeFragment;
 import com.tdt.neumaticos.Fragments.SalidaFragment;
+import com.tdt.neumaticos.Fragments.SeleccionarutaFragment;
 import com.tdt.neumaticos.Model.DrawerItem;
 
 import java.util.ArrayList;
@@ -178,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 //si no es la ventana de configuración
                 selectItem(position, titulo);
-                Log.d("salida",titulo);
+                //Log.d("salida",titulo);
             }
             else
             {
@@ -241,7 +243,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new LeercodigoFragment();
                     break;
                 case "Montaje":
-                    fragment = new MontajeFragment();
+                    dato="Montaje";
+                    fragment = new SeleccionarutaFragment();
                     break;
                 case "Mantenimiento":
                     dato="Mantenimiento";
@@ -256,10 +259,12 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new LeercodigoFragment();
                     break;
                 case "Salida":
-                    fragment = new SalidaFragment();
+                    dato="Salida";
+                    fragment = new SeleccionarutaFragment();
                     break;
                 case "Entrada":
-                    fragment = new EntradaFragment();
+                    dato="Entrada";
+                    fragment = new SeleccionarutaFragment();
                     break;
                 default:
                     dato="Alta";

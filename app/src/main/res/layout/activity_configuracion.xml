@@ -54,7 +54,7 @@
                 >
 
                 <Button
-                    android:id="@+id/button_regresar"
+                    android:id="@+id/button_regresar_conf"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -63,7 +63,7 @@
                     />
 
                 <Button
-                    android:id="@+id/button_guardar"
+                    android:id="@+id/button_guardar_conf"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
