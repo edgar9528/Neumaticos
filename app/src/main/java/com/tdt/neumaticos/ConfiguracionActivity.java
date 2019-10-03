@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.zebra.rfid.api3.*;
+
+import java.util.ArrayList;
 
 public class ConfiguracionActivity extends AppCompatActivity {
 
@@ -52,6 +55,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
 
     }
 

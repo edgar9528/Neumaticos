@@ -88,6 +88,15 @@
                     android:paddingTop="6dp"
                     />
 
+                <Button
+                    android:id="@+id/button_leer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leer codigo"
+                    android:theme="@style/RaisedButtonDark"
+                    android:paddingTop="6dp"
+                    />
+
             </LinearLayout>
 
         </ScrollView>

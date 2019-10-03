@@ -28,29 +28,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     ImageView iv_logo;
 
+    Button button_leer;
+
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Importante");
-        dialogo1.setMessage("¿Desea salir de la app?");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-
-            }
-        });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                //cancelar();
-            }
-        });
-        dialogo1.show();
     }
 
     @Override
@@ -67,12 +49,23 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.logo);
 
+        button_leer = findViewById(R.id.button_leer);
+
+        button_leer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,RfidActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //ti_usuario.setText("edgar");
         //ti_contrasena.setText("edgar");
 
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                verificarServidor();
                 if(servidor_conf) {
                     if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
                         usuario = ti_usuario.getText().toString();

@@ -1,5 +1,6 @@
 package com.tdt.neumaticos.Fragments;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,6 +55,7 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         if(tipo.equals("Mantenimiento"))
             tv_mensaje.setText("dar mantenimiento");
 
+
         button_codigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +65,8 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                 verificaCodigo();
             }
         });
+
+
 
         return view;
     }
