@@ -41,6 +41,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
     private int peticion=0;
 
     private String tipoVehiculo;
+    private int totalLlantas;
 
     Button button_terminar,button_cancelar;
 
@@ -147,7 +148,9 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
                         mostrar=mostrar+datos[i]+resultado[i]+"\n";
                     }
 
+                    totalLlantas= Integer.parseInt(resultado[7]) ;
                     tipoVehiculo=resultado[8];
+
 
                     mensajeConfirmacion(mostrar);
                 }
@@ -191,7 +194,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
         FragmentTransaction ft = null;
 
         if(tipo.equals("Montaje"))
-            ft = fm.beginTransaction().replace(R.id.container, MontajeFragment.newInstance(tipo,tipoVehiculo,ruta_id) );
+            ft = fm.beginTransaction().replace(R.id.container, MontajeFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
         else
         if(tipo.equals("Entrada"))
             ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id) );

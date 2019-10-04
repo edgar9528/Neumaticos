@@ -264,7 +264,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "Entrada":
                     dato="Entrada";
-                    fragment = new SeleccionarutaFragment();
+                    //fragment = new SeleccionarutaFragment();
+                    fragment = new Leercod_entsalFragment();
                     break;
                 default:
                     dato="Alta";

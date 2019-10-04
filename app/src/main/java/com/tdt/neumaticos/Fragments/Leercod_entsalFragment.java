@@ -1,8 +1,12 @@
 package com.tdt.neumaticos.Fragments;
 
 import android.app.ProgressDialog;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +22,8 @@ import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
+import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
+import com.zebra.rfid.api3.ACCESS_OPERATION_STATUS;
 import com.zebra.rfid.api3.ENUM_TRANSPORT;
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE;
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE;
@@ -37,12 +43,14 @@ import com.zebra.rfid.api3.TriggerInfo;
 
 import java.util.ArrayList;
 
-public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
+public class Leercod_entsalFragment extends Fragment{
 
     String tipo,codigo;
     String ubicacion,ubicacion_id;
 
     TextView tv_mensaje,tv_codigo;
+
+    ArrayList<String> totalTags;
 
     //Variables leer codigo
 
@@ -53,6 +61,8 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
     private static String TAG = "DEMO";
     TextView textView;
     private EventHandler eventHandler;
+    ToneGenerator toneGen1;
+    ToneGenerator toneGenerator;
 
     public Leercod_entsalFragment() {
         // Required empty public constructor
@@ -66,21 +76,14 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
         MainActivity activity = (MainActivity) getActivity();
         tipo= activity.getDataFragmento();
 
+        totalTags= new ArrayList<>();
+
 
         final View view = inflater.inflate(R.layout.fragment_leercod_entsal, container, false);
 
         tv_mensaje = view.findViewById(R.id.tv_mensaje);
         tv_codigo = view.findViewById(R.id.tv_codigo);
         textView = view.findViewById(R.id.TagText);
-
-        if(tipo.equals("Entrada"))
-            tv_mensaje.setText("dar entrada");
-        else
-        if(tipo.equals("Salida"))
-            tv_mensaje.setText("dar salida");
-        else
-        if(tipo.equals("Montaje"))
-            tv_mensaje.setText("dar montaje");
 
         conectarLector();
 
@@ -152,7 +155,7 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
                 }
                 else
                 {
-                    //Toast.makeText(getContext(), "No conectado", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Lector no conectado", Toast.LENGTH_LONG).show();
                     textView.setText("Lector no conectado");
                 }
             }
@@ -189,34 +192,57 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
         }
     }
 
+    public void beep() {
+        toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP,100);
+    }
+
+
+
+    public void reproducirSonido()
+    {
+        Log.d(TAG, "playTone");
+        try {
+            if (toneGenerator == null) {
+                toneGenerator = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            }
+            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 100);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (toneGenerator != null) {
+                        Log.d(TAG, "ToneGenerator released");
+                        toneGenerator.release();
+                        toneGenerator = null;
+                    }
+                }
+            }, 200);
+        } catch (Exception e) {
+            Log.d(TAG, "Exception while playing sound:" + e);
+        }
+    }
+
     // Read/Status Notify handler
     // Implement the RfidEventsLister class to receive event notifications
     public class EventHandler implements RfidEventsListener {
         // Read Event Notification
         public void eventReadNotify(RfidReadEvents e) {
             // Recommended to use new method getReadTagsEx for better performance in case of large tag population
-            TagData[] myTags = reader.Actions.getReadTags(100);
+            TagData[] myTags = reader.Actions.getReadTags(1);
             if (myTags != null)
             {
-                Log.d("salida", "Tag ID " + myTags[0].getTagID());
-                codigo=myTags[0].getTagID();
-                cambiarFragment();
-
-
-                /*
+                reproducirSonido();
                 for (int index = 0; index < myTags.length; index++) {
                     Log.d(TAG, "Tag ID " + myTags[index].getTagID());
-                    if(index==0)
-                    {
-                        renombrar("prueba2");
-                    }
+                    totalTags.add(myTags[index].getTagID());
                     if (myTags[index].getOpCode() == ACCESS_OPERATION_CODE.ACCESS_OPERATION_READ &&
                             myTags[index].getOpStatus() == ACCESS_OPERATION_STATUS.ACCESS_SUCCESS) {
                         if (myTags[index].getMemoryBankData().length() > 0) {
                             Log.d(TAG, " Mem Bank Data " + myTags[index].getMemoryBankData());
                         }
                     }
-                }*/
+                }
             }
         }
 
@@ -245,6 +271,7 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
                         protected Void doInBackground(Void... voids) {
                             try {
                                 reader.Actions.Inventory.stop();
+
                             } catch (InvalidUsageException e) {
                                 e.printStackTrace();
                             } catch (OperationFailureException e) {
@@ -252,115 +279,25 @@ public class Leercod_entsalFragment extends Fragment implements AsyncResponse {
                             }
                             return null;
                         }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            verTagsLeidos();
+                        }
                     }.execute();
                 }
             }
         }
     }
 
-
-    public void verificaCodigo()
+    public void verTagsLeidos()
     {
-        String command="";
-
-        if(tipo.equals("Alta"))
-            command = "08|"+codigo+"\u001a";
-        else
-        if(tipo.equals("Cambia")|| tipo.equals("Baja")||tipo.equals("Mantenimiento"))
-            command = "11|"+codigo+"\u001a";
-
-
-        ConexionSocket conexionSocket2 = new ConexionSocket();
-        conexionSocket2.command = command;
-        conexionSocket2.context = Leercod_entsalFragment.this.getActivity();
-        conexionSocket2.delegate = this;
-        conexionSocket2.execute();
-
-    }
-
-
-    @Override
-    public void processFinish(String output){
-        try
+        for(int i=0; i<totalTags.size();i++)
         {
-            String clave = output.substring(0,2);
-            String mensaje = output.substring(2,output.length());
-            mensaje=mensaje.trim(); // elimina espacios en blanco al principio y final
-
-            if(clave.equals("BC"))
-            {
-                if(tipo.equals("Alta"))
-                {
-                    cambiarFragment();
-                }
-                else
-                if(tipo.equals("Cambia"))
-                {
-                    String[] resultado = mensaje.split(",");
-                    ubicacion_id= resultado[0];
-                    ubicacion=resultado[1];
-                    cambiarFragment();
-                }
-                else
-                if(tipo.equals("Baja"))
-                {
-                    String[] resultado = mensaje.split(",");
-                    ubicacion_id= resultado[0];
-                    ubicacion=resultado[1];
-                    cambiarFragment();
-                }
-                else
-                if(tipo.equals("Mantenimiento"))
-                {
-                    String[] resultado = mensaje.split(",");
-                    ubicacion_id= resultado[0];
-                    ubicacion=resultado[1];
-                    cambiarFragment();
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(getContext(), totalTags.get(i), Toast.LENGTH_SHORT).show();
+            Log.d("salidat", totalTags.get(i));
         }
-        catch (Exception e)
-        {
-            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    public void cambiarFragment()
-    {
-        try {
-            if (reader != null) {
-                reader.Events.removeEventsListener(eventHandler);
-                reader.disconnect();
-                reader = null;
-                readers.Dispose();
-                readers = null;
-                Log.d("salida","Lector desconectado");
-            }
-        } catch (InvalidUsageException e) {
-            e.printStackTrace();
-        } catch (OperationFailureException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = null;
-
-        //ft = fm.beginTransaction().replace(R.id.container,SeleccionarutaFragment.newInstance(codigo,tipo));
-
-        ft.addToBackStack(null);
-        if (false || !BuildConfig.DEBUG)
-            ft.commitAllowingStateLoss();
-        else
-            ft.commit();
-        fm.executePendingTransactions();
-
 
     }
 }

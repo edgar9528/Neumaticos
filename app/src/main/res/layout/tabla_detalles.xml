@@ -1,0 +1,38 @@
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/lTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="10"
+        android:layout_column="0"
+        android:layout_weight="1"
+        android:text="hola"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/lDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:ellipsize="none"
+        android:textSize="18sp"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:maxLines="10"
+        android:layout_column="1"
+        android:layout_weight="4"
+        android:text="holaadfsdgw34545"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+</TableRow>

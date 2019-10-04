@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,27 +27,33 @@ import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MontajeFragment extends Fragment implements AsyncResponse {
 
     private static final String PARAMETRO="codigo";
-    private static String tipo;
-    private static String tipoVehiculo;
-    private static String ruta;
+    private static String tipo,tipoVehiculo,ruta;
+    private static int totalLlantas;
 
     private int peticion=0;
 
     int ejesD,ejesT,llanD,llanT;
+
     String iv_clave[];
-    int iv_ids[];
+    int iv_ids[], tv_ids[];
+
+    ArrayList<String> llanta_clave,llanta_numero,llanta_codigo;
+    TableLayout tableLayout;
+    TextView tv_seleccionado;
 
     View vista;
+    LayoutInflater layoutInflater;
 
     public MontajeFragment() {
         // Required empty public constructor
     }
 
-    public static MontajeFragment newInstance (String tip,String tipVehi, String rut)
+    public static MontajeFragment newInstance (String tip,String tipVehi, String rut,int totLl)
     {
         MontajeFragment fragment = new MontajeFragment();
         Bundle args = new Bundle();
@@ -53,6 +61,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         tipo=tip;
         tipoVehiculo=tipVehi;
         ruta=rut;
+        totalLlantas=totLl;
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,15 +70,17 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_montaje, container, false);
-
         vista = view;
+        layoutInflater = inflater;
 
-
-
+        tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        tv_seleccionado = view.findViewById(R.id.tv_seleccionado);
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
         String command = "06|"+tipoVehiculo+"\u001a";
         peticionSocket(command);
+
+
 
 
         return view;
@@ -117,10 +128,31 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 else
                 if(peticion==1)
                 {
-                    String[] resultado = mensaje.split(",");
-                    for (int i=0; i<resultado.length;i++)
+                    if(mensaje.isEmpty())
                     {
-                        Log.d("salida","p2"+resultado[i]+"|");
+                        TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+
+                        ((TextView) tr.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
+                        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG"); //Dato de la columna 2
+                        tableLayout.addView(tr);
+
+                        for(int i=0; i<totalLlantas;i++)
+                        {
+                            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+
+                            ((TextView) tr.findViewById(R.id.lTitle)).setText(llanta_numero.get(i)); //Dato de la columna 1
+                            ((TextView) tr.findViewById(R.id.lDetail)).setText("0000000000"); //Dato de la columna 2
+                            tableLayout.addView(tr);
+                            Log.d("salida","entro aqui");
+                        }
+
+                    }
+                    else
+                    {
+                        String[] resultado = mensaje.split(",");
+                        Log.d("salida","tiene llantas");
+
+
                     }
 
                 }
@@ -141,25 +173,41 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     public void dibujarCamion()
     {
+        ArrayList<String> clavesOrdenadas;
+        ArrayList<String> clavesGeneradas;
 
         //todos las las claves de las posiciones de llantas (IDS de ImageView)
         iv_clave = new String[] {"ti11","ti12","ti21","ti22","di11","di12","di21","di22",
-                "td11","td12","td21","td22","dd11","dd12","dd21","dd22"};
+                                 "td11","td12","td21","td22","dd11","dd12","dd21","dd22"};
 
         //Todos los id's de los image view
         iv_ids = new int[] {R.id.ti11,R.id.ti12,R.id.ti21,R.id.ti22,R.id.di11,R.id.di12,R.id.di21,R.id.di22,
                 R.id.td11,R.id.td12,R.id.td21,R.id.td22,R.id.dd11,R.id.dd12,R.id.dd21,R.id.dd22};
 
+        tv_ids = new int[] {R.id.t_ti11,R.id.t_ti12,R.id.t_ti21,R.id.t_ti22,R.id.t_di11,R.id.t_di12,R.id.t_di21,R.id.t_di22,
+                R.id.t_td11,R.id.t_td12,R.id.t_td21,R.id.t_td22,R.id.t_dd11,R.id.t_dd12,R.id.t_dd21,R.id.t_dd22};
 
+
+        //Para obtener los neumaticos enumerados
+        String[] clavOrd= {"di22","di21","dd21","dd22","di12","di11","dd11","dd12",
+                           "ti22","ti21","td21","td22","ti12","ti11","td11","td12"};
+        clavesGeneradas = new ArrayList<>();
+        clavesOrdenadas = new ArrayList<>(Arrays.asList(clavOrd));
+        llanta_clave = new ArrayList<>();
+        llanta_numero = new ArrayList<>();
+
+        String clave;
         for(int i=1; i<=ejesT;i++)
         {
             for(int j=1;j<=llanT;j++)
             {
-                dibujarLlanta("ti"+String.valueOf(i)+String.valueOf(j));
+                clave = "ti"+String.valueOf(i)+String.valueOf(j);
+                clavesGeneradas.add(clave);
             }
             for(int j=1;j<=llanT;j++)
             {
-                dibujarLlanta("td"+String.valueOf(i)+String.valueOf(j));
+                clave= "td"+String.valueOf(i)+String.valueOf(j);
+                clavesGeneradas.add(clave);
             }
         }
 
@@ -167,17 +215,37 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         {
             for(int j=1;j<=llanD;j++)
             {
-                dibujarLlanta("di"+String.valueOf(i)+String.valueOf(j));
+                clave= "di"+String.valueOf(i)+String.valueOf(j);
+                clavesGeneradas.add(clave);
             }
             for(int j=1;j<=llanD;j++)
             {
-                dibujarLlanta("dd"+String.valueOf(i)+String.valueOf(j));
+                clave="dd"+String.valueOf(i)+String.valueOf(j);
+                clavesGeneradas.add(clave);
             }
         }
 
+        //Obtener numeros de neumaticos y dibujarlos
+        int con=1;
+        for(int i=0; i<clavesOrdenadas.size();i++)
+        {
+            for(int j=0; j<clavesGeneradas.size();j++)
+            {
+                if(clavesOrdenadas.get(i).equals(clavesGeneradas.get(j)))
+                {
+                    llanta_clave.add(clavesGeneradas.get(j));
+                    llanta_numero.add( String.valueOf(con));
+
+                    dibujarLlanta(clavesGeneradas.get(j),con);
+                    con++;
+
+                    j=clavesGeneradas.size(); //terminar ciclo
+                }
+            }
+        }
     }
 
-    public void dibujarLlanta(String clave)
+    public void dibujarLlanta(String clave,int numero)
     {
         //Busca la clave en la lista de claves, obtiene el indice y dibuja en ese ImageView
         for(int k=0; k<iv_clave.length;k++)
@@ -185,10 +253,25 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             if (clave.equals(iv_clave[k])) {
                 ImageView imageView = vista.findViewById(iv_ids[k]);
                 imageView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+                imageView.setTag(numero);
+                imageView.setOnClickListener(ivListener);
+
+                TextView textView = vista.findViewById(tv_ids[k]);
+                textView.setText(String.valueOf(numero));
+
                 k=iv_clave.length;
             }
         }
     }
+
+    //Evento cada que se da click a una llanta
+    private View.OnClickListener ivListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Log.d("salida","llanta:"+view.getTag());
+            tv_seleccionado.setText("Neumático: "+view.getTag()+" seleccionado");
+        }
+    };
 
 
     public void goFragmentAnterior()
@@ -215,5 +298,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
     }
+
 
 }

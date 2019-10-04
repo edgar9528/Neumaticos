@@ -30,50 +30,121 @@
                     android:paddingRight="10dp"
                     >
 
-                    <ImageView
-                        android:id="@+id/ti12"
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/ti12"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:tag="ti12"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_ti12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/ti12"
+                            android:layout_alignTop="@+id/ti12"
+                            android:layout_alignRight="@+id/ti12"
+                            android:layout_alignBottom="@+id/ti12"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/ti22"
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/ti22"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_ti22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/ti22"
+                            android:layout_alignTop="@+id/ti22"
+                            android:layout_alignRight="@+id/ti22"
+                            android:layout_alignBottom="@+id/ti22"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
+
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         >
-
                     </LinearLayout>
 
 
-                    <ImageView
-                        android:id="@+id/di12"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/di12"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_di12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/di12"
+                            android:layout_alignTop="@+id/di12"
+                            android:layout_alignRight="@+id/di12"
+                            android:layout_alignBottom="@+id/di12"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/di22"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/di22"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_di22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/di22"
+                            android:layout_alignTop="@+id/di22"
+                            android:layout_alignRight="@+id/di22"
+                            android:layout_alignBottom="@+id/di22"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -86,23 +157,58 @@
                     android:paddingRight="10dp"
                     >
 
-                    <ImageView
-                        android:id="@+id/ti11"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/ti11"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_ti11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/ti11"
+                            android:layout_alignTop="@+id/ti11"
+                            android:layout_alignRight="@+id/ti11"
+                            android:layout_alignBottom="@+id/ti11"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/ti21"
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/ti21"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_ti21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/ti21"
+                            android:layout_alignTop="@+id/ti21"
+                            android:layout_alignRight="@+id/ti21"
+                            android:layout_alignBottom="@+id/ti21"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -113,23 +219,57 @@
                     </LinearLayout>
 
 
-                    <ImageView
-                        android:id="@+id/di11"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/di11"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_di11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/di11"
+                            android:layout_alignTop="@+id/di11"
+                            android:layout_alignRight="@+id/di11"
+                            android:layout_alignBottom="@+id/di11"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/di21"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/di21"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_di21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/di21"
+                            android:layout_alignTop="@+id/di21"
+                            android:layout_alignRight="@+id/di21"
+                            android:layout_alignBottom="@+id/di21"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -151,23 +291,59 @@
                     android:paddingRight="10dp"
                     >
 
-                    <ImageView
-                        android:id="@+id/td11"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/td11"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_td11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/td11"
+                            android:layout_alignTop="@+id/td11"
+                            android:layout_alignRight="@+id/td11"
+                            android:layout_alignBottom="@+id/td11"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/td21"
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/td21"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_td21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/td21"
+                            android:layout_alignTop="@+id/td21"
+                            android:layout_alignRight="@+id/td21"
+                            android:layout_alignBottom="@+id/td21"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
+
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -178,23 +354,58 @@
                     </LinearLayout>
 
 
-                    <ImageView
-                        android:id="@+id/dd11"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/dd11"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_dd11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/dd11"
+                            android:layout_alignTop="@+id/dd11"
+                            android:layout_alignRight="@+id/dd11"
+                            android:layout_alignBottom="@+id/dd11"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/dd21"
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/dd21"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_dd21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/dd21"
+                            android:layout_alignTop="@+id/dd21"
+                            android:layout_alignRight="@+id/dd21"
+                            android:layout_alignBottom="@+id/dd21"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -207,23 +418,57 @@
                     android:paddingRight="10dp"
                     >
 
-                    <ImageView
-                        android:id="@+id/td12"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/td12"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_td12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/td12"
+                            android:layout_alignTop="@+id/td12"
+                            android:layout_alignRight="@+id/td12"
+                            android:layout_alignBottom="@+id/td12"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/td22"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/td22"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_td22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/td22"
+                            android:layout_alignTop="@+id/td22"
+                            android:layout_alignRight="@+id/td22"
+                            android:layout_alignBottom="@+id/td22"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -234,23 +479,57 @@
                     </LinearLayout>
 
 
-                    <ImageView
-                        android:id="@+id/dd12"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/dd12"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_dd12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/dd12"
+                            android:layout_alignTop="@+id/dd12"
+                            android:layout_alignRight="@+id/dd12"
+                            android:layout_alignBottom="@+id/dd12"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/dd22"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-
                         >
-                    </ImageView>
+                        <ImageView
+                            android:id="@+id/dd22"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/t_dd22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:layout_alignLeft="@+id/dd22"
+                            android:layout_alignTop="@+id/dd22"
+                            android:layout_alignRight="@+id/dd22"
+                            android:layout_alignBottom="@+id/dd22"
+                            android:text=""
+                            android:textColor="#ffffff" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -258,7 +537,7 @@
 
 
         <TextView
-            android:id="@+id/tv_titulo"
+            android:id="@+id/tv_seleccionado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -270,6 +549,14 @@
             android:paddingBottom="@dimen/paddingControles"
             android:paddingTop="@dimen/paddingControles"
             />
+
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+        </TableLayout>
 
 
     </LinearLayout>
