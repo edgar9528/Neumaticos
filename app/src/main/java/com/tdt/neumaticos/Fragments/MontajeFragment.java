@@ -1,13 +1,21 @@
 package com.tdt.neumaticos.Fragments;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +36,10 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     private int peticion=0;
 
     int ejesD,ejesT,llanD,llanT;
+    String iv_clave[];
+    int iv_ids[];
+
+    View vista;
 
     public MontajeFragment() {
         // Required empty public constructor
@@ -50,10 +62,12 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_montaje, container, false);
 
-        TextView tv_alta = view.findViewById(R.id.tv_montaje);
+        vista = view;
 
-        tv_alta.setText("MONTAJE "+tipo+"|"+tipoVehiculo+"|"+ruta);
 
+
+
+        //pide la información del vehiculo, despues la información de las llantas de la ruta
         String command = "06|"+tipoVehiculo+"\u001a";
         peticionSocket(command);
 
@@ -94,7 +108,10 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
                     //Ejecuta la siguiente peticion
                     String command = "12|"+ruta+"\u001a";
+
                     peticionSocket(command);
+
+                    dibujarCamion();
 
                 }
                 else
@@ -105,7 +122,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     {
                         Log.d("salida","p2"+resultado[i]+"|");
                     }
-
 
                 }
             }
@@ -121,6 +137,57 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             goFragmentAnterior();
         }
 
+    }
+
+    public void dibujarCamion()
+    {
+
+        //todos las las claves de las posiciones de llantas (IDS de ImageView)
+        iv_clave = new String[] {"ti11","ti12","ti21","ti22","di11","di12","di21","di22",
+                "td11","td12","td21","td22","dd11","dd12","dd21","dd22"};
+
+        //Todos los id's de los image view
+        iv_ids = new int[] {R.id.ti11,R.id.ti12,R.id.ti21,R.id.ti22,R.id.di11,R.id.di12,R.id.di21,R.id.di22,
+                R.id.td11,R.id.td12,R.id.td21,R.id.td22,R.id.dd11,R.id.dd12,R.id.dd21,R.id.dd22};
+
+
+        for(int i=1; i<=ejesT;i++)
+        {
+            for(int j=1;j<=llanT;j++)
+            {
+                dibujarLlanta("ti"+String.valueOf(i)+String.valueOf(j));
+            }
+            for(int j=1;j<=llanT;j++)
+            {
+                dibujarLlanta("td"+String.valueOf(i)+String.valueOf(j));
+            }
+        }
+
+        for(int i=1; i<=ejesD;i++)
+        {
+            for(int j=1;j<=llanD;j++)
+            {
+                dibujarLlanta("di"+String.valueOf(i)+String.valueOf(j));
+            }
+            for(int j=1;j<=llanD;j++)
+            {
+                dibujarLlanta("dd"+String.valueOf(i)+String.valueOf(j));
+            }
+        }
+
+    }
+
+    public void dibujarLlanta(String clave)
+    {
+        //Busca la clave en la lista de claves, obtiene el indice y dibuja en ese ImageView
+        for(int k=0; k<iv_clave.length;k++)
+        {
+            if (clave.equals(iv_clave[k])) {
+                ImageView imageView = vista.findViewById(iv_ids[k]);
+                imageView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+                k=iv_clave.length;
+            }
+        }
     }
 
 

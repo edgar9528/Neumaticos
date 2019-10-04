@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.logo);
 
-        //ti_usuario.setText("edgar");
-        //ti_contrasena.setText("edgar");
+        ti_usuario.setText("edgar");
+        ti_contrasena.setText("edgar");
 
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
