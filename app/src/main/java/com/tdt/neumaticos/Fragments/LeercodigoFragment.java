@@ -101,10 +101,8 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         button_codigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //codigo="CODPRUEBA2";
-
-                //verificaCodigo();
+                desconectarLector();
+                conectarLector();
             }
         });
 
@@ -498,5 +496,11 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
             AlertDialog dialog = builder.create();
             dialog.show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        desconectarLector();
     }
 }

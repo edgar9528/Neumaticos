@@ -378,9 +378,8 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     //LEER CODIGO TC20
 
-    public void conectarLector()
+    public void desconectarLector()
     {
-
         //si hay una coneccion, se cierra
         try {
             if (reader != null) {
@@ -397,7 +396,13 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void conectarLector()
+    {
+
+        //si hay una coneccion, se cierra
+        desconectarLector();
 
         if (readers == null) {
             readers = new Readers(getContext(), ENUM_TRANSPORT.SERVICE_SERIAL);
@@ -676,8 +681,10 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("salida","entro a salida");
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        desconectarLector();
+
     }
 }
