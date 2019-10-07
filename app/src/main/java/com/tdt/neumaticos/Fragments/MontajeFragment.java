@@ -2,10 +2,7 @@ package com.tdt.neumaticos.Fragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -17,18 +14,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -73,13 +63,15 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     String iv_clave[];
     int iv_ids[], tv_ids[];
-    int llantaSeleccionada=0;
+    int llantaSeleccionada=-1;
     boolean menuSeleccion=false;
 
-    ArrayList<String> llanta_clave,llanta_numero,llanta_codigo;
+    ArrayList<String> llanta_clave,llanta_numero;
+    String llanta_tag[];
     TableLayout tableLayout;
     TextView tv_seleccionado,tv_lector;
-    Button button_cancelar,button_terminar;
+    Button button_cancelar,button_terminar,button_conectar;
+    ImageView imageViewLantas[];
     View vista;
     LayoutInflater layoutInflater;
 
@@ -122,7 +114,10 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         tv_lector = view.findViewById(R.id.tv_lector);
         button_cancelar = view.findViewById(R.id.button_cancelar4);
         button_terminar = view.findViewById(R.id.button_terminar4);
+        button_conectar = view.findViewById(R.id.button_conectar);
         totalTags= new ArrayList<>();
+        llanta_tag = new String[totalLlantas];
+        imageViewLantas = new ImageView[totalLlantas];
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
         String command = "06|"+tipoVehiculo+"\u001a";
@@ -133,7 +128,21 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //actualizarTabla();
+                Toast.makeText(getContext(), "boton finalizar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        button_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goFragmentAnterior();
+            }
+        });
+
+        button_conectar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                conectarLector();
             }
         });
 
@@ -224,7 +233,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
 
             ((TextView) tr.findViewById(R.id.lTitle)).setText(llanta_numero.get(i)); //Dato de la columna 1
-            ((TextView) tr.findViewById(R.id.lDetail)).setText("0000000000"); //Dato de la columna 2
+            ((TextView) tr.findViewById(R.id.lDetail)).setText(llanta_tag[i]); //Dato de la columna 2
             tableLayout.addView(tr);
         }
     }
@@ -309,10 +318,10 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         for(int k=0; k<iv_clave.length;k++)
         {
             if (clave.equals(iv_clave[k])) {
-                ImageView imageView = vista.findViewById(iv_ids[k]);
-                imageView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
-                imageView.setTag(numero);
-                imageView.setOnClickListener(ivListener);
+                imageViewLantas[numero-1] = vista.findViewById(iv_ids[k]);
+                imageViewLantas[numero-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+                imageViewLantas[numero-1].setTag(numero);
+                imageViewLantas[numero-1].setOnClickListener(ivListener);
 
                 TextView textView = vista.findViewById(tv_ids[k]);
                 textView.setText(String.valueOf(numero));
@@ -328,10 +337,19 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         public void onClick(View view) {
             Log.d("salida","llanta:"+view.getTag());
             tv_seleccionado.setText("Neumático: "+view.getTag()+" seleccionado");
+
+            //regresamos la anterior a llanta negra
+            if(llantaSeleccionada>0)
+                imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+
             llantaSeleccionada= Integer.parseInt(view.getTag().toString());
+
+            //se pinta de rojo la nueva seleccionada
+            imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
+
+
         }
     };
-
 
     public void goFragmentAnterior()
     {
@@ -362,6 +380,25 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     public void conectarLector()
     {
+
+        //si hay una coneccion, se cierra
+        try {
+            if (reader != null) {
+                reader.Events.removeEventsListener(eventHandler);
+                reader.disconnect();
+                reader = null;
+                readers.Dispose();
+                readers = null;
+            }
+        } catch (InvalidUsageException e) {
+            e.printStackTrace();
+        } catch (OperationFailureException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         if (readers == null) {
             readers = new Readers(getContext(), ENUM_TRANSPORT.SERVICE_SERIAL);
         }
@@ -514,13 +551,45 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             if (rfidStatusEvents.StatusEventData.getStatusEventType() == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
                 if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
 
-                    if(llantaSeleccionada>0)
+                    if(llantaSeleccionada>-1)
+                    {
+                        if(menuSeleccion==false)
+                        {
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        reader.Actions.Inventory.perform();
+                                    } catch (InvalidUsageException e) {
+                                        e.printStackTrace();
+                                    } catch (OperationFailureException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
+                            }.execute();
+                        }
+                        else
+                        {
+                            notificacion("Selecciona un tag");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        notificacion("Selecciona un neumático");
+                        return;
+                    }
+                }
+                if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
+
+                    if(llantaSeleccionada>-1 && menuSeleccion==false)
                     {
                         new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... voids) {
                                 try {
-                                    reader.Actions.Inventory.perform();
+                                    reader.Actions.Inventory.stop();
                                 } catch (InvalidUsageException e) {
                                     e.printStackTrace();
                                 } catch (OperationFailureException e) {
@@ -528,33 +597,16 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                                 }
                                 return null;
                             }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                verTagsLeidos();
+                            }
                         }.execute();
                     }
                     else
-                    {
-                        notificacion("Selecciona un neumático");
-                    }
-                }
-                if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            try {
-                                reader.Actions.Inventory.stop();
-                            } catch (InvalidUsageException e) {
-                                e.printStackTrace();
-                            } catch (OperationFailureException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            super.onPostExecute(aVoid);
-                            verTagsLeidos();
-                        }
-                    }.execute();
+                        return;
                 }
             }
         }
@@ -582,26 +634,39 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             }
         }
 
+        totalTags.clear();
+
         if(tagsLeidos.size()>0)
             menuFlotante();
         else
             Toast.makeText(getContext(), "No se leyeron tags", Toast.LENGTH_SHORT).show();
-
     }
 
     public void menuFlotante()
     {
         if(menuSeleccion==false)
         {
+            menuSeleccion=true;
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Tag para neumático: " + llantaSeleccionada);
+            builder.setCancelable(false);
 
             final String[] items = tagsLeidos.toArray(new String[tagsLeidos.size()]);
 
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int indice) {
-                    llanta_clave.set(llantaSeleccionada - 1, tagsLeidos.get(indice));
+                    //llanta_clave.set(llantaSeleccionada - 1, tagsLeidos.get(indice));
+                    llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
+                    actualizarTabla();
+                    menuSeleccion=false;
+                }
+            });
+
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int indice) {
+                    //cancelar();
+                    menuSeleccion=false;
                 }
             });
 
@@ -610,5 +675,9 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("salida","entro a salida");
+    }
 }

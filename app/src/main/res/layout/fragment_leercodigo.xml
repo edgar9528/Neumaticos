@@ -12,9 +12,19 @@
         >
 
         <TextView
+            android:id="@+id/tv_infoLector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Escanea el codigo para"
+            android:text="Lector no conectado"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Escanea el tag para"
             android:textColor="@color/colorPrimaryDark"
             android:textAlignment="center"
             android:textSize="25sp"

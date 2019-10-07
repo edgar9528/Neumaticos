@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
-import com.tdt.neumaticos.Fragments.ConfiguracionFragment;
-import com.tdt.neumaticos.Fragments.EntradaFragment;
-import com.tdt.neumaticos.Fragments.Leercod_entsalFragment;
 import com.tdt.neumaticos.Fragments.LeercodigoFragment;
-import com.tdt.neumaticos.Fragments.MontajeFragment;
-import com.tdt.neumaticos.Fragments.SalidaFragment;
 import com.tdt.neumaticos.Fragments.SeleccionarutaFragment;
 import com.tdt.neumaticos.Model.DrawerItem;
 
@@ -264,8 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "Entrada":
                     dato="Entrada";
-                    //fragment = new SeleccionarutaFragment();
-                    fragment = new Leercod_entsalFragment();
+                    fragment = new SeleccionarutaFragment();
                     break;
                 default:
                     dato="Alta";

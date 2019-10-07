@@ -596,15 +596,22 @@
                 />
 
             <Button
-                android:id="@+id/button_terminar4"
+                android:id="@+id/button_conectar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Terminar"
+                android:text="Conectar lector"
                 android:theme="@style/RaisedButtonDark"
                 />
-
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button_terminar4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Terminar"
+            android:theme="@style/RaisedButtonDark"
+            />
 
 
     </LinearLayout>
