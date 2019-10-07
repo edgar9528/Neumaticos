@@ -78,7 +78,6 @@ public class Leercod_entsalFragment extends Fragment{
 
         totalTags= new ArrayList<>();
 
-
         final View view = inflater.inflate(R.layout.fragment_leercod_entsal, container, false);
 
         tv_mensaje = view.findViewById(R.id.tv_mensaje);
