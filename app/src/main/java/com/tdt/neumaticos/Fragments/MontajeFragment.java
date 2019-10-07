@@ -18,7 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -55,7 +57,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     //variables del fragment
     private static final String PARAMETRO="codigo";
     private static String tipo,tipoVehiculo,ruta;
-    private static int totalLlantas;
+    private static int totalLlantas,totalRefacciones;
 
     private int peticion=0;
 
@@ -66,14 +68,15 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     int llantaSeleccionada=-1;
     boolean menuSeleccion=false;
 
-    ArrayList<String> llanta_clave,llanta_numero;
+    ArrayList<String> llanta_clave,llanta_numero,refaccion_numero,refaccion_tag;
     String llanta_tag[];
-    TableLayout tableLayout;
+    TableLayout tableLayout,tableLayout2;
     TextView tv_seleccionado,tv_lector;
     Button button_cancelar,button_terminar,button_conectar;
     ImageView imageViewLantas[];
     View vista;
     LayoutInflater layoutInflater;
+    CheckBox cb_refacciones;
 
     //Variables para leer codigo
     private static Readers readers;
@@ -110,11 +113,13 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         layoutInflater = inflater;
 
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        tableLayout2 = (TableLayout) view.findViewById(R.id.tableLayout2);
         tv_seleccionado = view.findViewById(R.id.tv_seleccionado);
         tv_lector = view.findViewById(R.id.tv_lector);
         button_cancelar = view.findViewById(R.id.button_cancelar4);
         button_terminar = view.findViewById(R.id.button_terminar4);
         button_conectar = view.findViewById(R.id.button_conectar);
+        cb_refacciones = view.findViewById(R.id.cb_refacciones);
         totalTags= new ArrayList<>();
         llanta_tag = new String[totalLlantas];
         imageViewLantas = new ImageView[totalLlantas];
@@ -143,6 +148,20 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             @Override
             public void onClick(View view) {
                 conectarLector();
+            }
+        });
+
+        cb_refacciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(cb_refacciones.isChecked())
+                {
+                    Log.d("salida","revisado");
+                }
+                else
+                    Log.d("salida","norevisa");
+
             }
         });
 
@@ -192,6 +211,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 {
                     if(mensaje.isEmpty())
                     {
+                        totalRefacciones=0;
                         actualizarTabla();
                     }
                     else
@@ -220,12 +240,12 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     public void actualizarTabla()
     {
+        //TABLA NEUMATICOS
         tableLayout.removeAllViews();
-
         TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
 
         ((TextView) tr.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
-        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG"); //Dato de la columna 2
+        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG NUMATICO"); //Dato de la columna 2
         tableLayout.addView(tr);
 
         for(int i=0; i<totalLlantas;i++)
@@ -236,6 +256,28 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             ((TextView) tr.findViewById(R.id.lDetail)).setText(llanta_tag[i]); //Dato de la columna 2
             tableLayout.addView(tr);
         }
+
+
+        //TABLA REFACCIONES
+
+        tableLayout2.removeAllViews();
+        TableRow tr2 = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+
+        ((TextView) tr2.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
+        ((TextView) tr2.findViewById(R.id.lDetail)).setText("TAG REFACCIÓN"); //Dato de la columna 2
+        tableLayout2.addView(tr2);
+
+        for(int i=0; i<totalRefacciones;i++)
+        {
+            tr2 = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+
+            ((TextView) tr2.findViewById(R.id.lTitle)).setText(refaccion_numero.get(i)); //Dato de la columna 1
+            ((TextView) tr2.findViewById(R.id.lDetail)).setText(refaccion_tag.get(i)); //Dato de la columna 2
+            tableLayout2.addView(tr2);
+        }
+
+
+
     }
 
     public void dibujarCamion()
@@ -652,8 +694,16 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         if(menuSeleccion==false)
         {
             menuSeleccion=true;
+
+            String mensaje;
+            if(cb_refacciones.isChecked())
+                mensaje="Tag para refacción";
+            else
+                mensaje= "Tag para neumático: " + llantaSeleccionada;
+
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Tag para neumático: " + llantaSeleccionada);
+            builder.setTitle(mensaje);
             builder.setCancelable(false);
 
             final String[] items = tagsLeidos.toArray(new String[tagsLeidos.size()]);
