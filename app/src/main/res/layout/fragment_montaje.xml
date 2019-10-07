@@ -33,7 +33,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -61,7 +61,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -96,7 +96,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -122,7 +122,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -159,7 +159,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -169,16 +169,20 @@
                             android:layout_weight="1"
                             >
                         </ImageView>
+
                         <TextView
                             android:id="@+id/t_ti11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:gravity="center"
                             android:layout_alignLeft="@+id/ti11"
                             android:layout_alignTop="@+id/ti11"
                             android:layout_alignRight="@+id/ti11"
                             android:layout_alignBottom="@+id/ti11"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginEnd="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:gravity="center"
                             android:text=""
                             android:textColor="#ffffff" />
                     </RelativeLayout>
@@ -186,7 +190,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -221,7 +225,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -247,7 +251,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -276,7 +280,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="85dp"
                     android:background="@drawable/camion"
                     >
                 </ImageView>
@@ -293,7 +297,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -320,7 +324,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -356,7 +360,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -383,7 +387,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -420,7 +424,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -446,7 +450,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -481,7 +485,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -507,7 +511,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         android:layout_weight="1"
                         >
                         <ImageView
@@ -535,6 +539,19 @@
 
             </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_lector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Lector no conectado"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingBottom="@dimen/paddingControles"
+            android:paddingTop="@dimen/paddingControles"
+            />
 
         <TextView
             android:id="@+id/tv_seleccionado"
@@ -557,6 +574,37 @@
             android:layout_height="wrap_content"
             android:weightSum="2">
         </TableLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:paddingBottom="@dimen/paddingControles"
+            android:paddingTop="@dimen/paddingControles"
+            >
+
+            <Button
+                android:id="@+id/button_cancelar4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                android:theme="@style/RaisedButtonDark"
+                />
+
+            <Button
+                android:id="@+id/button_terminar4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Terminar"
+                android:theme="@style/RaisedButtonDark"
+                />
+
+        </LinearLayout>
 
 
     </LinearLayout>

@@ -59,10 +59,11 @@ public class Leercod_entsalFragment extends Fragment{
     private static ReaderDevice readerDevice;
     private static RFIDReader reader;
     private static String TAG = "DEMO";
-    TextView textView;
     private EventHandler eventHandler;
     ToneGenerator toneGen1;
     ToneGenerator toneGenerator;
+
+    TextView textView;
 
     public Leercod_entsalFragment() {
         // Required empty public constructor
@@ -159,7 +160,6 @@ public class Leercod_entsalFragment extends Fragment{
                 }
             }
         }.execute();
-
     }
 
     private void ConfigureReader() {
