@@ -149,13 +149,22 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crearPeticion();
+                if(!verificaRepetidos())
+                {
+                    crearPeticion();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No debe repetir tags", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
         button_cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                desconectarLector();
                 goFragmentAnterior();
             }
         });
@@ -187,6 +196,41 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         });
 
         return view;
+    }
+
+    public boolean verificaRepetidos()
+    {
+        boolean repetido=false;
+
+        ArrayList<String> tagsListos = new ArrayList<>();
+
+        for(int i=0; i<totalLlantas;i++)
+        {
+            if(!llanta_tag[i].isEmpty())
+                tagsListos.add(llanta_tag[i]);
+        }
+        for(int i=0; i<totalRefacciones;i++)
+        {
+            tagsListos.add(refaccion_tag.get(i));
+        }
+
+        for(int i=0; i<tagsListos.size();i++)
+        {
+            for(int j=0; j<tagsListos.size();j++)
+            {
+                if(i!=j)
+                {
+                    if(tagsListos.get(i).equals(tagsListos.get(j)))
+                    {
+                        repetido=true;
+                        j=tagsListos.size();
+                        i=tagsListos.size();
+                    }
+                }
+            }
+        }
+
+        return repetido;
     }
 
 
@@ -297,27 +341,30 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     }
                     else
                     {
+                        totalRefacciones=0;
+
                         String[] resultado = mensaje.split(",");
-                        for(int i=0; i<resultado.length/2;i++)
+                        for(int i=0,k=1; i<resultado.length;i=i+2,k=k+2)
                         {
-                            if(resultado[i+1].equals("0"))
+                            if(resultado[k].equals("0"))
                             {
+                                totalRefacciones++;
                                 refaccion_tag.add(resultado[i]);
+                                refaccion_numero.add(String.valueOf(totalRefacciones));
                             }
                             else
                             {
                                 for(int j=0; j<llanta_numero.size();j++)
                                 {
-                                    if(resultado[i+1].equals(llanta_numero.get(j)))
+                                    if(resultado[k].equals(llanta_numero.get(j)))
                                     {
                                         llanta_tag[j]=resultado[i];
                                     }
                                 }
                             }
                         }
-                        actualizarTabla();
-                            //Log.d("resPet",resultado[i]);
 
+                        actualizarTabla();
                     }
                 }
                 else
@@ -325,6 +372,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     if(mensaje.isEmpty())
                     {
                         Toast.makeText(getContext(), "Montaje agregado", Toast.LENGTH_LONG).show();
+                        desconectarLector();
                         goFragmentAnterior();
                     }
                     else
@@ -346,7 +394,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                                 String mostrar="Tags en otra ruta: \n\n"+men;
                                 mensajeError(mostrar);
                             }
-
                         }catch (Exception e)
                         {
                             Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
@@ -418,6 +465,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             ((TextView) tr2.findViewById(R.id.lDetail)).setText(refaccion_tag.get(i)); //Dato de la columna 2
             tableLayout2.addView(tr2);
         }
+
     }
 
     public void dibujarCamion()
@@ -864,7 +912,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     else
                         llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
 
-
                     actualizarTabla();
                     menuSeleccion=false;
                 }
@@ -885,8 +932,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         desconectarLector();
-
     }
 }
