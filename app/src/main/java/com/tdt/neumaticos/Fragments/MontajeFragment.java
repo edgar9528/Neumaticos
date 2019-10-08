@@ -3,6 +3,7 @@ package com.tdt.neumaticos.Fragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
+import com.tdt.neumaticos.LoginActivity;
+import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
 import com.zebra.rfid.api3.ACCESS_OPERATION_STATUS;
@@ -57,7 +60,8 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     //variables del fragment
     private static final String PARAMETRO="codigo";
     private static String tipo,tipoVehiculo,ruta;
-    private static int totalLlantas,totalRefacciones;
+    private static int totalLlantas,totalRefacciones=0;
+    private String user;
 
     private int peticion=0;
 
@@ -108,9 +112,15 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity activity = (MainActivity) getActivity();
+        user= activity.getUsuarioActivity();
+
         final View view = inflater.inflate(R.layout.fragment_montaje, container, false);
         vista = view;
         layoutInflater = inflater;
+
+
 
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
         tableLayout2 = (TableLayout) view.findViewById(R.id.tableLayout2);
@@ -122,7 +132,13 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         cb_refacciones = view.findViewById(R.id.cb_refacciones);
         totalTags= new ArrayList<>();
         llanta_tag = new String[totalLlantas];
+        refaccion_tag = new ArrayList<>();
+        refaccion_numero = new ArrayList<>();
         imageViewLantas = new ImageView[totalLlantas];
+
+        //inicianizar los tags vacios
+        for(int i=0; i<totalLlantas;i++)
+            llanta_tag[i]="";
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
         String command = "06|"+tipoVehiculo+"\u001a";
@@ -133,7 +149,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "boton finalizar", Toast.LENGTH_SHORT).show();
+                crearPeticion();
             }
         });
 
@@ -157,15 +173,79 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
                 if(cb_refacciones.isChecked())
                 {
-                    Log.d("salida","revisado");
+                    if(llantaSeleccionada>-1)
+                        imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+                    tv_seleccionado.setText("Selecciona el neumático a montar");
+                    llantaSeleccionada=0;
                 }
                 else
-                    Log.d("salida","norevisa");
-
+                {
+                    tv_seleccionado.setText("Selecciona el neumático a montar");
+                    llantaSeleccionada=-1;
+                }
             }
         });
 
         return view;
+    }
+
+
+    public void crearPeticion()
+    {
+        String command = "07|" + ruta + "|" + tipoVehiculo + "|" + user;
+        boolean algunTagVacio=false;
+        boolean todosTagVacios=true;
+
+        for(int i=0; i<totalLlantas;i++)
+        {
+            if(!llanta_tag[i].isEmpty())
+            {
+                todosTagVacios=false;
+                command = command +"|"+llanta_numero.get(i)+"|"+llanta_tag[i];
+
+                Log.d("salida",llanta_numero.get(i)+"|"+llanta_tag[i]);
+            }
+            else
+                algunTagVacio=true;
+        }
+
+        if(todosTagVacios)
+        {
+            Toast.makeText(getContext(), "Debe montar al menos una llanta", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            for(int i=0; i<refaccion_tag.size();i++)
+            {
+                command = command +"|0|"+refaccion_tag.get(i);
+            }
+
+            command=command+"\u001a";
+
+            Log.d("SalidaCommand",command);
+
+            if(algunTagVacio)
+            {
+                android.support.v7.app.AlertDialog.Builder dialogo1 = new android.support.v7.app.AlertDialog.Builder(getContext());
+                dialogo1.setTitle("Importante");
+                dialogo1.setMessage("Algunos neumáticos no tienen un tag, ¿Desea continuar?");
+                dialogo1.setCancelable(false);
+                final String finalCommand = command;
+                dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        peticionSocket(finalCommand);
+                    }
+                });
+                dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                    }
+                });
+                dialogo1.show();
+            }
+            else
+                peticionSocket(command);
+
+        }
     }
 
     private void peticionSocket(String command)
@@ -209,6 +289,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 else
                 if(peticion==1)
                 {
+                    peticion++;
                     if(mensaje.isEmpty())
                     {
                         totalRefacciones=0;
@@ -217,11 +298,60 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     else
                     {
                         String[] resultado = mensaje.split(",");
-                        Log.d("salida","tiene llantas");
-
+                        for(int i=0; i<resultado.length/2;i++)
+                        {
+                            if(resultado[i+1].equals("0"))
+                            {
+                                refaccion_tag.add(resultado[i]);
+                            }
+                            else
+                            {
+                                for(int j=0; j<llanta_numero.size();j++)
+                                {
+                                    if(resultado[i+1].equals(llanta_numero.get(j)))
+                                    {
+                                        llanta_tag[j]=resultado[i];
+                                    }
+                                }
+                            }
+                        }
+                        actualizarTabla();
+                            //Log.d("resPet",resultado[i]);
 
                     }
+                }
+                else
+                {
+                    if(mensaje.isEmpty())
+                    {
+                        Toast.makeText(getContext(), "Montaje agregado", Toast.LENGTH_LONG).show();
+                        goFragmentAnterior();
+                    }
+                    else
+                    {
+                        char error=' ';
+                        String tags="";
+                        try
+                        {
+                            error=mensaje.charAt(0);
+                            String men = mensaje.substring(1);
+                            if(error=='1')
+                            {
+                                String mostrar="Tags no dados de alta: \n\n"+men;
+                                mensajeError(mostrar);
+                            }
+                            else
+                            if(error=='2')
+                            {
+                                String mostrar="Tags en otra ruta: \n\n"+men;
+                                mensajeError(mostrar);
+                            }
 
+                        }catch (Exception e)
+                        {
+                            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
             else
@@ -236,6 +366,19 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             goFragmentAnterior();
         }
 
+    }
+
+    public void mensajeError(String men)
+    {
+        android.support.v7.app.AlertDialog.Builder dialogo1 = new android.support.v7.app.AlertDialog.Builder(getContext());
+        dialogo1.setTitle("Error");
+        dialogo1.setMessage(men);
+        dialogo1.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.show();
     }
 
     public void actualizarTabla()
@@ -275,9 +418,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             ((TextView) tr2.findViewById(R.id.lDetail)).setText(refaccion_tag.get(i)); //Dato de la columna 2
             tableLayout2.addView(tr2);
         }
-
-
-
     }
 
     public void dibujarCamion()
@@ -711,8 +851,20 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int indice) {
-                    //llanta_clave.set(llantaSeleccionada - 1, tagsLeidos.get(indice));
-                    llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
+                    if(cb_refacciones.isChecked())
+                    {
+                        refaccion_tag.add(tagsLeidos.get(indice));
+                        refaccion_numero.add( String.valueOf( refaccion_tag.size()) );
+                        totalRefacciones++;
+                        for(int i=0;i<refaccion_tag.size();i++)
+                        {
+                            Log.d("salida","tg: "+refaccion_tag.get(i));
+                        }
+                    }
+                    else
+                        llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
+
+
                     actualizarTabla();
                     menuSeleccion=false;
                 }
