@@ -10,6 +10,10 @@ import android.widget.Toast;
 import com.tdt.neumaticos.LoginActivity;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -61,31 +65,33 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
             //recibir información
             if(socket != null && socket.isConnected())
             {
-                int byteCount=1024;
-                BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
-                byte[] buffer = new byte[byteCount];
-                int con=0;
 
-                while(input.read(buffer, 0, byteCount) != -1  )
+                BufferedInputStream in = new BufferedInputStream(socket.getInputStream());
+                byte[] contents = new byte[4096];
+
+                int bytesRead = 0;
+                String strFileContents="";
+                while((bytesRead = in.read(contents)) != -1)
                 {
-                    String decoded = ConvertirRespuesta(buffer);
-                    Log.d("salida",decoded);
-                    respuestaSocket=decoded;
-                    con++;
-                    for (int i = 0; i < buffer.length && buffer[i]!=0 ; ++ i)
-                        buffer[i] =32;
-                    if(con==1)
+                    strFileContents += new String(contents, 0, bytesRead);
+                    if(strFileContents.charAt(strFileContents.length()-1)== '\u001a')
+                    {
                         break;
+                    }
                 }
+
+                respuestaSocket = strFileContents.substring(13,strFileContents.length()-1);
+                Log.d("salida","_"+respuestaSocket+"_");
             }
 
             //enviar el parametro
             //metodo cerrar conexion del socket
-            command="00"+"\u001a";
+            command="00|"+"\u001a";
             output.println(command);
             output.flush();
 
             socket.close();
+
             result=respuestaSocket;
 
         } catch (Exception e) {

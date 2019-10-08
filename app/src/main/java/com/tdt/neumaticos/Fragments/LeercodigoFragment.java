@@ -118,10 +118,10 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
         String command="";
 
         if(tipo.equals("Alta"))
-            command = "08|"+codigo+"\u001a";
+            command = "08|"+codigo+"|\u001a";
         else
         if(tipo.equals("Cambia")|| tipo.equals("Baja")||tipo.equals("Mantenimiento"))
-            command = "11|"+codigo+"\u001a";
+            command = "11|"+codigo+"|\u001a";
 
 
         ConexionSocket conexionSocket2 = new ConexionSocket();

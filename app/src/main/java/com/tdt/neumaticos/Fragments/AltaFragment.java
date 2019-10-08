@@ -200,7 +200,7 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
     public void obtenerInfoSpinnerMarcas()
     {
-        String command = "03"+"\u001a";
+        String command = "03"+"|\u001a";
 
         ConexionSocket conexionSocket = new ConexionSocket();
         conexionSocket.command = command;
@@ -212,7 +212,7 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
     public void obtenerInfoSpinnerAlmacen()
     {
-        String command = "04"+"\u001a";
+        String command = "04"+"|\u001a";
 
         ConexionSocket conexionSocket2 = new ConexionSocket();
         conexionSocket2.command = command;
@@ -233,7 +233,7 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
             if(clave.equals("BC"))
             {
-                String[] resultado = mensaje.split(",");
+                String[] resultado = mensaje.split("\u0009");
 
                 if(peticion==0)
                 {
