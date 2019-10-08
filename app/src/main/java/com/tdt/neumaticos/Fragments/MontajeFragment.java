@@ -112,15 +112,12 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         MainActivity activity = (MainActivity) getActivity();
         user= activity.getUsuarioActivity();
 
         final View view = inflater.inflate(R.layout.fragment_montaje, container, false);
         vista = view;
         layoutInflater = inflater;
-
-
 
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
         tableLayout2 = (TableLayout) view.findViewById(R.id.tableLayout2);
@@ -157,7 +154,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 {
                     Toast.makeText(getContext(), "No debe repetir tags", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -233,7 +229,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         return repetido;
     }
 
-
     public void crearPeticion()
     {
         String command = "07|" + ruta + "|" + tipoVehiculo + "|" + user;
@@ -301,6 +296,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         conexionSocket2.execute();
     }
 
+    //RECIBE TODAS LAS PETICIONES AL SOCKET
     @Override
     public void processFinish(String output){
         try
@@ -313,6 +309,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             {
                 if(peticion==0)
                 {
+                    //recibe la información de las llantas de acuerdo al tipo de vehiculo
                     String[] resultado = mensaje.split(",");
 
                     ejesD = Integer.parseInt(resultado[0]);
@@ -322,13 +319,13 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
                     peticion++;
 
-                    //Ejecuta la siguiente peticion
+                    //Ejecuta la siguiente peticion(Solicita llantas ya almacenadas)
                     String command = "12|"+ruta+"\u001a";
 
                     peticionSocket(command);
 
+                    //hace calculos para dibujar todas las llantas del camion
                     dibujarCamion();
-
                 }
                 else
                 if(peticion==1)
@@ -336,16 +333,21 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     peticion++;
                     if(mensaje.isEmpty())
                     {
+                        //quiere decir que no tiene llantas/refacciones registradas
+                        //las llantas se inicializan en "" (vacio)
                         totalRefacciones=0;
+                        //Muestra las llantas/refacciones y sus tags
                         actualizarTabla();
                     }
                     else
                     {
                         totalRefacciones=0;
-
+                        //Resultado contiene los neumaticos ya asignados
                         String[] resultado = mensaje.split(",");
+
                         for(int i=0,k=1; i<resultado.length;i=i+2,k=k+2)
                         {
+                            //si el numero del neumatico es 0, entonces es refaccion y se agrega
                             if(resultado[k].equals("0"))
                             {
                                 totalRefacciones++;
@@ -354,6 +356,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                             }
                             else
                             {
+                                //si no, entonces se agrega a las llantas dependiendo el numero de llanta
                                 for(int j=0; j<llanta_numero.size();j++)
                                 {
                                     if(resultado[k].equals(llanta_numero.get(j)))
@@ -363,7 +366,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                                 }
                             }
                         }
-
+                        //Muestra las llantas/refacciones y sus tags
                         actualizarTabla();
                     }
                 }
@@ -371,6 +374,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 {
                     if(mensaje.isEmpty())
                     {
+                        //Realizo el montaje con exito
                         Toast.makeText(getContext(), "Montaje agregado", Toast.LENGTH_LONG).show();
                         desconectarLector();
                         goFragmentAnterior();
@@ -378,7 +382,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     else
                     {
                         char error=' ';
-                        String tags="";
+                        //encontro un error, ve el tipo de error y muestra el mensaje
                         try
                         {
                             error=mensaje.charAt(0);
@@ -412,7 +416,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
             goFragmentAnterior();
         }
-
     }
 
     public void mensajeError(String men)
@@ -577,7 +580,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             //se pinta de rojo la nueva seleccionada
             imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
 
-
         }
     };
 
@@ -585,6 +587,8 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     {
         try
         {
+            desconectarLector();
+
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = null;
 
