@@ -197,10 +197,10 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
             ft = fm.beginTransaction().replace(R.id.container, MontajeFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
         else
         if(tipo.equals("Entrada"))
-            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id) );
+            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
         else
         if(tipo.equals("Salida"))
-            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id) );
+            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
 
         ft.addToBackStack(null);
         if (false || !BuildConfig.DEBUG)

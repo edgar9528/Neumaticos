@@ -468,7 +468,6 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             ((TextView) tr2.findViewById(R.id.lDetail)).setText(refaccion_tag.get(i)); //Dato de la columna 2
             tableLayout2.addView(tr2);
         }
-
     }
 
     public void dibujarCamion()
