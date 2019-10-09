@@ -42,7 +42,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
     private String tipo,usuario;
     private int peticion=0;
 
-    TextView tv_titulo;
+    TextView tv_titulo,tv_codigo;
     Button button_terminar,button_cancelar;
 
     public BajamatenimientoFragment() {
@@ -71,6 +71,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
         final View view = inflater.inflate(R.layout.fragment_bajamantenimiento, container, false);
 
         tv_titulo = view.findViewById(R.id.tv_titulo);
+        tv_codigo = view.findViewById(R.id.tv_tagLeido);
         button_cancelar = view.findViewById(R.id.button_cancelar3);
         button_terminar = view.findViewById(R.id.button_terminar3);
 
@@ -79,6 +80,8 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
             tv_titulo.setText("Motivo para dar de baja");
         else
             tv_titulo.setText("Motivo para dar mantenimiento");
+
+        tv_codigo.setText(codigo);
 
         peticionSocket();
 
@@ -104,7 +107,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
                     if(tipo.equals("Baja"))
                     {
 
-                        command = "19|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + ubicacion + "|" + usuario +"|\u001a";
+                        command = "19|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + ubicacion + "|" + usuario +"\u001a";
 
                         titulo="Se dará de baja";
 
@@ -117,7 +120,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
                     }
                     else
                     {
-                        command = "17|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + bajaMante + "|" + usuario +"|\u001a";
+                        command = "17|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + bajaMante + "|" + usuario +"\u001a";
 
                         titulo="Se dará el mantenimiento";
 
@@ -183,11 +186,11 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
 
         if(tipo.equals("Baja"))
         {
-            command = "18|"+"|\u001a";
+            command = "18|"+"\u001a";
         }
         else
         {
-            command = "16|"+"|\u001a";
+            command = "16|"+"\u001a";
         }
 
         ConexionSocket conexionSocket = new ConexionSocket();

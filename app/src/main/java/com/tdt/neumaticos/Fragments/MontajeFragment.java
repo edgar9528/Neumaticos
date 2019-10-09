@@ -138,7 +138,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             llanta_tag[i]="";
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
-        String command = "06|"+tipoVehiculo+"|\u001a";
+        String command = "06|"+tipoVehiculo+"\u001a";
         peticionSocket(command);
 
         conectarLector();
@@ -320,7 +320,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     peticion++;
 
                     //Ejecuta la siguiente peticion(Solicita llantas ya almacenadas)
-                    String command = "12|"+ruta+"|\u001a";
+                    String command = "12|"+ruta+"\u001a";
 
                     peticionSocket(command);
 

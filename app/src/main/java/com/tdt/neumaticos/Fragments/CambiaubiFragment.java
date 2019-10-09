@@ -83,9 +83,9 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
                     String command;
 
                     if(esAlmacen)
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "A"+"|" + ubicacion_id +"|"+usuario+"|\u001a";
+                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "A"+"|" + ubicacion_id +"|"+usuario+"\u001a";
                     else
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "R"+"|" + ubicacion_id +"|"+usuario+"|\u001a";
+                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "R"+"|" + ubicacion_id +"|"+usuario+"\u001a";
 
                     ConexionSocket conexionSocket2 = new ConexionSocket();
                     conexionSocket2.command = command;

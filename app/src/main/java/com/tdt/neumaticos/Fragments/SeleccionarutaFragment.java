@@ -72,7 +72,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
                 {
                     String command;
 
-                    command = "02|"+ruta_id+"|\u001a";
+                    command = "02|"+ruta_id+"\u001a";
 
                     ConexionSocket conexionSocket = new ConexionSocket();
                     conexionSocket.command = command;
@@ -102,7 +102,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
     {
         String command;
 
-        command = "01"+"|\u001a";
+        command = "01"+"\u001a";
 
         ConexionSocket conexionSocket = new ConexionSocket();
         conexionSocket.command = command;

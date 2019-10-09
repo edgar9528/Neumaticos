@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         usuario = ti_usuario.getText().toString();
                         pass = ti_contrasena.getText().toString();
 
-                        String command = "10|" + usuario + "|" + pass + '\u001a';
+                        String command = "10|" + usuario + "|" + pass + "\u001a";
 
                         Log.d("salida", String.valueOf(command.length()));
 

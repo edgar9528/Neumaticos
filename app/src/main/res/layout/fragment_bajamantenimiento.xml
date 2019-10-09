@@ -35,6 +35,18 @@
                     android:paddingBottom="@dimen/paddingControles"
                     />
 
+                <TextView
+                    android:id="@+id/tv_tagLeido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="20sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
