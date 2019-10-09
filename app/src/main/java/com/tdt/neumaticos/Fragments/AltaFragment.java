@@ -139,7 +139,7 @@ public class AltaFragment extends Fragment implements AsyncResponse{
                             comando=comando+datos.get(i);
                     }
 
-                    String command = "05|" + comando +"\u001a";
+                    String command = "05|" + comando +"|\u001a";
 
                     ConexionSocket conexionSocket2 = new ConexionSocket();
                     conexionSocket2.command = command;

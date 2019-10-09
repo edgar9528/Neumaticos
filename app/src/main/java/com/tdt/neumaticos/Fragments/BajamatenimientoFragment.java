@@ -104,7 +104,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
                     if(tipo.equals("Baja"))
                     {
 
-                        command = "19|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + ubicacion + "|" + usuario +"\u001a";
+                        command = "19|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + ubicacion + "|" + usuario +"|\u001a";
 
                         titulo="Se dará de baja";
 
@@ -117,7 +117,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
                     }
                     else
                     {
-                        command = "17|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + bajaMante + "|" + usuario +"\u001a";
+                        command = "17|" + codigo + "|" + fechaHora + "|" + bajaMante_id + "|" + bajaMante + "|" + usuario +"|\u001a";
 
                         titulo="Se dará el mantenimiento";
 
@@ -183,11 +183,11 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
 
         if(tipo.equals("Baja"))
         {
-            command = "18"+"\u001a";
+            command = "18|"+"|\u001a";
         }
         else
         {
-            command = "16"+"\u001a";
+            command = "16|"+"|\u001a";
         }
 
         ConexionSocket conexionSocket = new ConexionSocket();
@@ -209,7 +209,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
             {
                 if(peticion==0)
                 {
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
 
                     bajaMantenimiento = new ArrayList<>();
                     bajaMantenimiento_id = new ArrayList<>();

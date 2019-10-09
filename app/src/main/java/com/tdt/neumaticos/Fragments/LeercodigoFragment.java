@@ -149,7 +149,7 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                 else
                 if(tipo.equals("Cambia"))
                 {
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
                     ubicacion_id= resultado[0];
                     ubicacion=resultado[1];
                     cambiarFragment();
@@ -157,7 +157,7 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                 else
                 if(tipo.equals("Baja"))
                 {
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
                     ubicacion_id= resultado[0];
                     ubicacion=resultado[1];
                     cambiarFragment();
@@ -165,7 +165,7 @@ public class LeercodigoFragment extends Fragment implements AsyncResponse {
                 else
                 if(tipo.equals("Mantenimiento"))
                 {
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
                     ubicacion_id= resultado[0];
                     ubicacion=resultado[1];
                     cambiarFragment();

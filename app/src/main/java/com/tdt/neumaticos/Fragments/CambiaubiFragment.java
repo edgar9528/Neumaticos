@@ -83,9 +83,9 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
                     String command;
 
                     if(esAlmacen)
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "A"+"|" + ubicacion_id +"|"+usuario+"\u001a";
+                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "A"+"|" + ubicacion_id +"|"+usuario+"|\u001a";
                     else
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "R"+"|" + ubicacion_id +"|"+usuario+"\u001a";
+                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "R"+"|" + ubicacion_id +"|"+usuario+"|\u001a";
 
                     ConexionSocket conexionSocket2 = new ConexionSocket();
                     conexionSocket2.command = command;
@@ -114,7 +114,7 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
 
     public void obtenerInfoSpinnerAlmacen()
     {
-        String command = "04"+"\u001a";
+        String command = "04|"+"\u001a";
 
         ConexionSocket conexionSocket2 = new ConexionSocket();
         conexionSocket2.command = command;
@@ -137,7 +137,7 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
                 if(peticion==0)
                 {
 
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
 
                     almacenes = new ArrayList<>();
                     almacenes_id = new ArrayList<>();

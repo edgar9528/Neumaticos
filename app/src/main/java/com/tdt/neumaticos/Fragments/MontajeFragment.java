@@ -138,7 +138,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             llanta_tag[i]="";
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
-        String command = "06|"+tipoVehiculo+"\u001a";
+        String command = "06|"+tipoVehiculo+"|\u001a";
         peticionSocket(command);
 
         conectarLector();
@@ -310,7 +310,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                 if(peticion==0)
                 {
                     //recibe la información de las llantas de acuerdo al tipo de vehiculo
-                    String[] resultado = mensaje.split(",");
+                    String[] resultado = mensaje.split("\u0009");
 
                     ejesD = Integer.parseInt(resultado[0]);
                     ejesT = Integer.parseInt(resultado[1]);
@@ -320,7 +320,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     peticion++;
 
                     //Ejecuta la siguiente peticion(Solicita llantas ya almacenadas)
-                    String command = "12|"+ruta+"\u001a";
+                    String command = "12|"+ruta+"|\u001a";
 
                     peticionSocket(command);
 
@@ -343,7 +343,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     {
                         totalRefacciones=0;
                         //Resultado contiene los neumaticos ya asignados
-                        String[] resultado = mensaje.split(",");
+                        String[] resultado = mensaje.split("\u0009");
 
                         for(int i=0,k=1; i<resultado.length;i=i+2,k=k+2)
                         {

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class ConexionSocket extends AsyncTask<String,Integer,String>
 {
@@ -51,6 +53,11 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
         InetAddress serverAddr;
 
         try {
+
+            //byte[] utf8ByteOutput = command.getBytes(StandardCharsets.UTF_16);
+            //byte[] ascii = command.getBytes(StandardCharsets.US_ASCII);
+
+            //byte[] comm=command.getBytes( StandardCharsets.US_ASCII );
 
             //Establecer conexion con servidor
             serverAddr = InetAddress.getByName(SERVER_IP);

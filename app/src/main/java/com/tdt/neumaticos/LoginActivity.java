@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.logo);
 
-        ti_usuario.setText("edgar");
-        ti_contrasena.setText("edgar");
+        ti_usuario.setText("1");
+        ti_contrasena.setText("1");
 
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +59,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         usuario = ti_usuario.getText().toString();
                         pass = ti_contrasena.getText().toString();
 
-                        String command = "10|" + usuario + "|" + pass + "|\u001a";
+                        String command = "10|" + usuario + "|" + pass + '\u001a';
+
+                        Log.d("salida", String.valueOf(command.length()));
 
                         //Envia la peticion al socket, recibe respuesta (delegate) en
                         //public void processFinish(String output)
