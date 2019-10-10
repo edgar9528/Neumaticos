@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -271,6 +272,7 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
             RadioButton radioButtonView = new RadioButton(getContext());
             radioButtonView.setText(bajaMantenimiento.get(i));
             radioButtonView.setTextColor( getResources().getColor(R.color.colorPrimaryDark) );
+            radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             radioGroup.addView(radioButtonView, p);
             radioButtonView.setOnClickListener(rbListener);
         }

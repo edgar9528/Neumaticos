@@ -9,16 +9,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -56,7 +60,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
     private static final String PARAMETRO="codigo";
     private static String tipo;
     private static String tipoVehiculo;
-    private static String ruta;
+    private static String ruta,responsable;
     private static int totalLlantas,totalRefacciones=0;
     private int peticion=0;
 
@@ -67,15 +71,16 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
     int llantaSeleccionada=-1;
     boolean menuSeleccion=false;
 
-    ArrayList<String> llanta_clave,llanta_numero,refaccion_numero,refaccion_tag;
+    ArrayList<String> llanta_clave,llanta_numero,refaccion_numero,refaccion_tag,refaccion_mm;
     String llanta_tag[];
-    TableLayout tableLayout,tableLayout2;
-    TextView tv_seleccionado,tv_lector;
+    String llanta_mm[];
+    TableLayout tableLayout;
+    TextView tv_lector,tv_nombreRuta;
     Button button_cancelar,button_terminar,button_conectar;
     ImageView imageViewLantas[];
     View vista;
     LayoutInflater layoutInflater;
-    CheckBox cb_refacciones;
+    TextInputEditText ti_kilometraje;
 
 
     //Variables para leer codigo
@@ -92,7 +97,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         // Required empty public constructor
     }
 
-    public static EntradaFragment newInstance (String tip,String tipVehi, String rut,int totLl)
+    public static EntradaFragment newInstance (String tip,String tipVehi, String rut,int totLl,String resp)
     {
         EntradaFragment fragment = new EntradaFragment();
         Bundle args = new Bundle();
@@ -101,6 +106,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         tipoVehiculo=tipVehi;
         ruta=rut;
         totalLlantas=totLl;
+        responsable=resp;
         fragment.setArguments(args);
         return fragment;
     }
@@ -114,30 +120,55 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         vista = view;
         layoutInflater = inflater;
 
-        tv_seleccionado = view.findViewById(R.id.tv_seleccionado);
         tv_lector = view.findViewById(R.id.tv_lector);
+        tv_nombreRuta = view.findViewById(R.id.tv_nombreRuta2);
+        ti_kilometraje = view.findViewById(R.id.ti_kilometraje2);
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
-        tableLayout2 = (TableLayout) view.findViewById(R.id.tableLayout2);
+
+        button_cancelar = view.findViewById(R.id.button_cancelar5);
+        button_terminar = view.findViewById(R.id.button_terminar5);
+        button_conectar = view.findViewById(R.id.button_conectar5);
+
         totalTags= new ArrayList<>();
         llanta_tag = new String[totalLlantas];
+        llanta_mm = new String[totalLlantas];
         refaccion_tag = new ArrayList<>();
         refaccion_numero = new ArrayList<>();
+        refaccion_mm = new ArrayList<>();
         imageViewLantas = new ImageView[totalLlantas];
+
+        tv_nombreRuta.setText(ruta+" | "+responsable);
+
 
         //inicianizar los tags vacios
         for(int i=0; i<totalLlantas;i++)
+        {
             llanta_tag[i]="";
-
-
+            llanta_mm[i]="";
+        }
 
         //pide la información del vehiculo, despues la información de las llantas de la ruta
         String command = "06|"+tipoVehiculo+"\u001a";
         peticionSocket(command);
 
+        conectarLector();
+
+        button_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                desconectarLector();
+                goFragmentAnterior();
+            }
+        });
+
+        button_conectar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                conectarLector();
+            }
+        });
 
 
-
-        Log.d("salida","creado fragment entrada");
 
         return view;
     }
@@ -177,7 +208,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                     peticion++;
 
                     //Ejecuta la siguiente peticion(Solicita llantas ya almacenadas)
-                    String command = "12|"+ruta+"\u001a";
+                    String command = "09|"+ruta+"\u001a";
 
                     peticionSocket(command);
 
@@ -188,58 +219,34 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                 if(peticion==1)
                 {
                     peticion++;
-                    if(mensaje.isEmpty())
-                    {
-                        //quiere decir que no tiene llantas/refacciones registradas
-                        //las llantas se inicializan en "" (vacio)
-                        totalRefacciones=0;
-                        //Muestra las llantas/refacciones y sus tags
-                        actualizarTabla();
-                    }
-                    else
-                    {
-                        totalRefacciones=0;
-                        //Resultado contiene los neumaticos ya asignados
-                        String[] resultado = mensaje.split("\u0009");
+                    totalRefacciones=0;
+                    //Resultado contiene los neumaticos ya asignados
+                    String[] resultado = mensaje.split("\u0009");
 
-                        for(int i=0,k=1; i<resultado.length;i=i+2,k=k+2)
+                    for(int i=0,k=1; i<resultado.length;i=i+2,k=k+2)
+                    {
+                        //si el numero del neumatico es 0, entonces es refaccion y se agrega
+                        if(resultado[k].equals("0"))
                         {
-                            //si el numero del neumatico es 0, entonces es refaccion y se agrega
-                            if(resultado[k].equals("0"))
+                            totalRefacciones++;
+                            refaccion_tag.add(resultado[i]);
+                            refaccion_numero.add(String.valueOf(totalRefacciones));
+                            refaccion_mm.add("");
+                        }
+                        else
+                        {
+                            //si no, entonces se agrega a las llantas dependiendo el numero de llanta
+                            for(int j=0; j<llanta_numero.size();j++)
                             {
-                                totalRefacciones++;
-                                refaccion_tag.add(resultado[i]);
-                                refaccion_numero.add(String.valueOf(totalRefacciones));
-                            }
-                            else
-                            {
-                                //si no, entonces se agrega a las llantas dependiendo el numero de llanta
-                                for(int j=0; j<llanta_numero.size();j++)
+                                if(resultado[k].equals(llanta_numero.get(j)))
                                 {
-                                    if(resultado[k].equals(llanta_numero.get(j)))
-                                    {
-                                        llanta_tag[j]=resultado[i];
-                                    }
+                                    llanta_tag[j]=resultado[i];
                                 }
                             }
                         }
-                        //Muestra las llantas/refacciones y sus tags
-                        actualizarTabla();
                     }
-                }
-                else
-                {
-                    if(mensaje.isEmpty())
-                    {
-                        //Realizo el montaje con exito
-                        Toast.makeText(getContext(), "Montaje agregado", Toast.LENGTH_LONG).show();
-                        desconectarLector();
-                        goFragmentAnterior();
-                    }
-                    else
-                    {
-
-                    }
+                    //Muestra las llantas/refacciones y sus tags
+                    actualizarTabla();
                 }
             }
             else
@@ -260,39 +267,42 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
     {
         //TABLA NEUMATICOS
         tableLayout.removeAllViews();
-        TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+        TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_entrada, null);
 
-        ((TextView) tr.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
-        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG NUMATICO"); //Dato de la columna 2
+        ((TextView) tr.findViewById(R.id.tabla_numero)).setText("#"); //Dato de la columna 1
+        ((TextView) tr.findViewById(R.id.tabla_montada)).setText("MONTADA"); //Dato de la columna 2
+        ((TextView) tr.findViewById(R.id.tabla_mm)).setText("MM"); //Dato de la columna 3
         tableLayout.addView(tr);
 
         for(int i=0; i<totalLlantas;i++)
         {
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_entrada, null);
 
-            ((TextView) tr.findViewById(R.id.lTitle)).setText(llanta_numero.get(i)); //Dato de la columna 1
-            ((TextView) tr.findViewById(R.id.lDetail)).setText(llanta_tag[i]); //Dato de la columna 2
+            String montada; //verifica si la llanta tiene un tag o no (si tiene, esta montada)
+            if(llanta_tag[i].isEmpty())
+                montada="No";
+            else
+                montada="Si";
+
+            ((TextView) tr.findViewById(R.id.tabla_numero)).setText(llanta_numero.get(i)); //Dato de la columna 1
+            ((TextView) tr.findViewById(R.id.tabla_montada)).setText(montada); //Dato de la columna 2
+            ((TextView) tr.findViewById(R.id.tabla_mm)).setText(llanta_mm[i]); //Dato de la columna 3
+
             tableLayout.addView(tr);
         }
 
-
         //TABLA REFACCIONES
-
-        tableLayout2.removeAllViews();
-        TableRow tr2 = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
-
-        ((TextView) tr2.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
-        ((TextView) tr2.findViewById(R.id.lDetail)).setText("TAG REFACCIÓN"); //Dato de la columna 2
-        tableLayout2.addView(tr2);
 
         for(int i=0; i<totalRefacciones;i++)
         {
-            tr2 = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_entrada, null);
 
-            ((TextView) tr2.findViewById(R.id.lTitle)).setText(refaccion_numero.get(i)); //Dato de la columna 1
-            ((TextView) tr2.findViewById(R.id.lDetail)).setText(refaccion_tag.get(i)); //Dato de la columna 2
-            tableLayout2.addView(tr2);
+            ((TextView) tr.findViewById(R.id.tabla_numero)).setText("Refacción"+refaccion_numero.get(i)); //Dato de la columna 1
+            ((TextView) tr.findViewById(R.id.tabla_montada)).setText("Si"); //Dato de la columna 2
+            ((TextView) tr.findViewById(R.id.tabla_mm)).setText(refaccion_mm.get(i)); //Dato de la columna 3
+            tableLayout.addView(tr);
         }
+
     }
 
 
@@ -379,7 +389,6 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                 imageViewLantas[numero-1] = vista.findViewById(iv_ids[k]);
                 imageViewLantas[numero-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
                 imageViewLantas[numero-1].setTag(numero);
-                imageViewLantas[numero-1].setOnClickListener(ivListener);
 
                 TextView textView = vista.findViewById(tv_ids[k]);
                 textView.setText(String.valueOf(numero));
@@ -389,24 +398,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         }
     }
 
-    //Evento cada que se da click a una llanta
-    private View.OnClickListener ivListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Log.d("salida","llanta:"+view.getTag());
-            tv_seleccionado.setText("Neumático: "+view.getTag()+" seleccionado");
 
-            //regresamos la anterior a llanta negra
-            if(llantaSeleccionada>0)
-                imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
-
-            llantaSeleccionada= Integer.parseInt(view.getTag().toString());
-
-            //se pinta de rojo la nueva seleccionada
-            imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
-
-        }
-    };
 
     public void mensajeError(String men)
     {
@@ -577,8 +569,6 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
             if (rfidStatusEvents.StatusEventData.getStatusEventType() == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
                 if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
 
-                    if(llantaSeleccionada>-1)
-                    {
                         if(menuSeleccion==false)
                         {
                             new AsyncTask<Void, Void, Void>() {
@@ -598,18 +588,11 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                         else
                         {
                             notificacion("Selecciona un tag");
-                            return;
                         }
-                    }
-                    else
-                    {
-                        notificacion("Selecciona un neumático");
-                        return;
-                    }
                 }
                 if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
 
-                    if(llantaSeleccionada>-1 && menuSeleccion==false)
+                    if(menuSeleccion==false)
                     {
                         new AsyncTask<Void, Void, Void>() {
                             @Override
@@ -631,8 +614,6 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                             }
                         }.execute();
                     }
-                    else
-                        return;
                 }
             }
         }
@@ -698,12 +679,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         {
             menuSeleccion=true;
 
-            String mensaje;
-            if(cb_refacciones.isChecked())
-                mensaje="Tag para refacción";
-            else
-                mensaje= "Tag para neumático: " + llantaSeleccionada;
-
+            String mensaje= "Selecione un tag";
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(mensaje);
@@ -714,20 +690,9 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int indice) {
-                    if(cb_refacciones.isChecked())
-                    {
-                        refaccion_tag.add(tagsLeidos.get(indice));
-                        refaccion_numero.add( String.valueOf( refaccion_tag.size()) );
-                        totalRefacciones++;
-                        for(int i=0;i<refaccion_tag.size();i++)
-                        {
-                            Log.d("salida","tg: "+refaccion_tag.get(i));
-                        }
-                    }
-                    else
-                        llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
 
-                    actualizarTabla();
+                    comprobarCodigo(tagsLeidos.get(indice));
+
                     menuSeleccion=false;
                 }
             });
@@ -742,6 +707,106 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
             AlertDialog dialog = builder.create();
             dialog.show();
         }
+    }
+
+    public void comprobarCodigo(String codigo)
+    {
+        //obtener todos los tags que estan guardados (montados)
+        boolean almacenado = verAlmacenados(codigo);
+
+        if(almacenado)
+        {
+            boolean esNeumatico = verNeumaticos(codigo);
+            if(esNeumatico)
+            {
+                Log.d("salida","neumatico");
+                recibirMM();
+            }
+            else
+            {
+                Log.d("salida","refaccion");
+                recibirMM();
+            }
+        }
+        else
+        {
+            Log.d("salida","no registrado");
+            recibirMM();
+        }
+
+
+        actualizarTabla();
+    }
+
+    public void recibirMM()
+    {
+        final EditText taskEditText = new EditText(getContext());
+        taskEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        taskEditText.requestFocus();
+
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Agrega los MM")
+                .setMessage("Llanta no registrada")
+                .setView(taskEditText)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String task = String.valueOf(taskEditText.getText());
+
+                        Toast.makeText(getContext(), task, Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+
+        ((InputMethodManager)getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE))
+                .showSoftInput(taskEditText, InputMethodManager.SHOW_FORCED);
+        taskEditText.requestFocus();
+
+
+    }
+
+    public boolean verAlmacenados(String codigo)
+    {
+        ArrayList<String> tags = new ArrayList<>();
+
+        for(int i=0; i<totalLlantas;i++)
+        {
+            if(!llanta_tag[i].isEmpty())
+                tags.add(llanta_tag[i]);
+        }
+        for(int i=0; i<totalRefacciones;i++)
+        {
+            tags.add(refaccion_tag.get(i));
+        }
+
+        boolean almacenado=false;
+        for(int i=0; i<tags.size();i++)
+        {
+            if(tags.contains(codigo))
+            {
+                almacenado=true;
+                i=tags.size();
+            }
+        }
+
+        return almacenado;
+    }
+
+    public boolean verNeumaticos(String codigo)
+    {
+        boolean neu = false;
+        for(int i=0; i<totalLlantas;i++)
+        {
+            if(llanta_tag[i].equals(codigo))
+            {
+                neu=true;
+                i=totalLlantas;
+            }
+        }
+        return neu;
     }
 
     @Override

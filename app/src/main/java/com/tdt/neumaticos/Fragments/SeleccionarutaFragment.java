@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
     private ArrayList<String> rutas_id;
     private boolean seleccionado=false;
     private String ruta;
+    private String responsable;
     private String ruta_id;
 
     private int peticion=0;
@@ -150,6 +152,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
 
                     totalLlantas= Integer.parseInt(resultado[7]) ;
                     tipoVehiculo=resultado[8];
+                    responsable=resultado[1];
 
 
                     mensajeConfirmacion(mostrar);
@@ -194,13 +197,13 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
         FragmentTransaction ft = null;
 
         if(tipo.equals("Montaje"))
-            ft = fm.beginTransaction().replace(R.id.container, MontajeFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
+            ft = fm.beginTransaction().replace(R.id.container, MontajeFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas,responsable) );
         else
         if(tipo.equals("Entrada"))
-            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
+            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas,responsable) );
         else
         if(tipo.equals("Salida"))
-            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas) );
+            ft = fm.beginTransaction().replace(R.id.container, EntradaFragment.newInstance(tipo,tipoVehiculo,ruta_id,totalLlantas,responsable) );
 
         ft.addToBackStack(null);
         if (false || !BuildConfig.DEBUG)
@@ -227,6 +230,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
             RadioButton radioButtonView = new RadioButton(getContext());
             radioButtonView.setText( rutas_id.get(i)+" | "+ rutas.get(i));
             radioButtonView.setTextColor( getResources().getColor(R.color.colorPrimaryDark) );
+            radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             radioGroup.addView(radioButtonView, p);
             radioButtonView.setOnClickListener(rbListener);
         }

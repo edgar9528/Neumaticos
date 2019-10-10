@@ -59,7 +59,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     //variables del fragment
     private static final String PARAMETRO="codigo";
-    private static String tipo,tipoVehiculo,ruta;
+    private static String tipo,tipoVehiculo,ruta,responsable;
     private static int totalLlantas,totalRefacciones=0;
     private String user;
 
@@ -75,7 +75,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     ArrayList<String> llanta_clave,llanta_numero,refaccion_numero,refaccion_tag;
     String llanta_tag[];
     TableLayout tableLayout,tableLayout2;
-    TextView tv_seleccionado,tv_lector;
+    TextView tv_seleccionado,tv_lector,tv_nombreRuta;
     Button button_cancelar,button_terminar,button_conectar;
     ImageView imageViewLantas[];
     View vista;
@@ -96,7 +96,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         // Required empty public constructor
     }
 
-    public static MontajeFragment newInstance (String tip,String tipVehi, String rut,int totLl)
+    public static MontajeFragment newInstance (String tip,String tipVehi, String rut,int totLl,String resp)
     {
         MontajeFragment fragment = new MontajeFragment();
         Bundle args = new Bundle();
@@ -105,6 +105,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         tipoVehiculo=tipVehi;
         ruta=rut;
         totalLlantas=totLl;
+        responsable=resp;
         fragment.setArguments(args);
         return fragment;
     }
@@ -123,6 +124,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         tableLayout2 = (TableLayout) view.findViewById(R.id.tableLayout2);
         tv_seleccionado = view.findViewById(R.id.tv_seleccionado);
         tv_lector = view.findViewById(R.id.tv_lector);
+        tv_nombreRuta = view.findViewById(R.id.tv_nombreRuta);
         button_cancelar = view.findViewById(R.id.button_cancelar4);
         button_terminar = view.findViewById(R.id.button_terminar4);
         button_conectar = view.findViewById(R.id.button_conectar);
@@ -132,6 +134,8 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         refaccion_tag = new ArrayList<>();
         refaccion_numero = new ArrayList<>();
         imageViewLantas = new ImageView[totalLlantas];
+
+        tv_nombreRuta.setText(ruta+" | "+responsable);
 
         //inicianizar los tags vacios
         for(int i=0; i<totalLlantas;i++)

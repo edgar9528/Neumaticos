@@ -16,6 +16,20 @@
         android:orientation="vertical"
         >
 
+            <TextView
+                android:id="@+id/tv_nombreRuta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ruta"
+                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingBottom="@dimen/paddingControles"
+                android:paddingTop="@dimen/paddingControles"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -2,10 +2,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:weightSum="3"
+    >
 
     <TextView
-        android:id="@+id/lTitle"
+        android:id="@+id/tabla_numero"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -18,7 +20,20 @@
         />
 
     <TextView
-        android:id="@+id/lDetail"
+        android:id="@+id/tabla_montada"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="10"
+        android:layout_column="0"
+        android:layout_weight="1"
+        android:text="Montada"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/tabla_mm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -30,8 +45,8 @@
         android:gravity="center_vertical"
         android:maxLines="10"
         android:layout_column="1"
-        android:layout_weight="4"
-        android:text="detalle"
+        android:layout_weight="1"
+        android:text="MM"
         android:textColor="@color/colorPrimaryDark"
         />
 
