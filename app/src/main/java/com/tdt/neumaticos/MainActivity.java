@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -168,25 +169,24 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String titulo = elementosMenu.get(position-1).getName();
 
-            if(!titulo.equals("Configuración")&&!titulo.equals("Cerrar sesión"))
+            //cuando en el menu no se toca el espacio de perfil y fotografia
+            if(position>0)
             {
-                //si no es la ventana de configuración
-                selectItem(position, titulo);
-                //Log.d("salida",titulo);
-            }
-            else
-            {
-                if(titulo.equals("Configuración"))
-                {
-                    Intent intent = new Intent(MainActivity.this,ConfiguracionActivity.class);
-                    startActivity(intent);
-                    mDrawerLayout.closeDrawer(listView);
-                }
-                else
-                {
-                    cerrarSesion();
+                String titulo = elementosMenu.get(position - 1).getName();
+
+                if (!titulo.equals("Configuración") && !titulo.equals("Cerrar sesión")) {
+                    //si no es la ventana de configuración
+                    selectItem(position, titulo);
+                    //Log.d("salida",titulo);
+                } else {
+                    if (titulo.equals("Configuración")) {
+                        Intent intent = new Intent(MainActivity.this, ConfiguracionActivity.class);
+                        startActivity(intent);
+                        mDrawerLayout.closeDrawer(listView);
+                    } else {
+                        cerrarSesion();
+                    }
                 }
             }
         }
