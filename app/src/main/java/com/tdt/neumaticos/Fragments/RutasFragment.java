@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
-import com.tdt.neumaticos.Clases.RevisasTextos;
+import com.tdt.neumaticos.Clases.RevisaTextos;
 import com.tdt.neumaticos.R;
 
 import java.util.ArrayList;
@@ -102,11 +102,11 @@ public class RutasFragment extends Fragment implements AsyncResponse{
         button_terminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RevisasTextos revisasTextos = new RevisasTextos();
+                RevisaTextos revisaTextos = new RevisaTextos();
 
-                if(revisasTextos.llenos(textInputs))
+                if(revisaTextos.llenos(textInputs))
                 {
-                    ArrayList<String> datos = revisasTextos.obtenerStrings(textInputs);
+                    ArrayList<String> datos = revisaTextos.obtenerStrings(textInputs);
                     String id_marca = marcas_id.get((int)spinner_marca.getSelectedItemId() );
                     String id_almacen = almacenes_id.get((int)spinner_ubicacion.getSelectedItemId() );
 

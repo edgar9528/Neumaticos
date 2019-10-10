@@ -567,6 +567,19 @@
                 android:paddingTop="@dimen/paddingControles"
                 />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lea los tags de cada llanta"
+                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingBottom="@dimen/paddingControles"
+                android:paddingTop="@dimen/paddingControles"
+                />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

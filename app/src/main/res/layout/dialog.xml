@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/paddingGeneral"
+    >
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingGeneral"
+        android:theme="@style/EditTextBlue"
+        >
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/ti_dialogmm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="MM"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:inputType="number"
+            android:digits="0123456789."
+            />
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

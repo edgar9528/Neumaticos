@@ -5,9 +5,9 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-public class RevisasTextos {
+public class RevisaTextos {
 
-    public RevisasTextos() {
+    public RevisaTextos() {
     }
 
     public boolean llenos(TextInputEditText[] editTexts)
@@ -33,6 +33,22 @@ public class RevisasTextos {
             arrayList.add( editTexts[i].getText().toString() );
         }
         return arrayList;
+    }
+
+    public boolean esNumero(String cadena)
+    {
+        boolean resultado;
+
+        try {
+            Float.parseFloat(cadena);
+            resultado = true;
+        } catch
+        (Exception e)
+        {
+            resultado = false;
+        }
+
+        return resultado;
     }
 
 }
