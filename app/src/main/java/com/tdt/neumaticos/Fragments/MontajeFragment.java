@@ -437,6 +437,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
 
     public void actualizarTabla()
     {
+        repintarLLantas();
         //TABLA NEUMATICOS
         tableLayout.removeAllViews();
         TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
@@ -555,7 +556,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         {
             if (clave.equals(iv_clave[k])) {
                 imageViewLantas[numero-1] = vista.findViewById(iv_ids[k]);
-                imageViewLantas[numero-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+                imageViewLantas[numero-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
                 imageViewLantas[numero-1].setTag(numero);
                 imageViewLantas[numero-1].setOnClickListener(ivListener);
 
@@ -574,17 +575,28 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
             Log.d("salida","llanta:"+view.getTag());
             tv_seleccionado.setText("Neumático: "+view.getTag()+" seleccionado");
 
-            //regresamos la anterior a llanta negra
-            if(llantaSeleccionada>0)
-                imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
+            //verificamos los colores de las llantas
+            repintarLLantas();
 
             llantaSeleccionada= Integer.parseInt(view.getTag().toString());
 
-            //se pinta de rojo la nueva seleccionada
-            imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
+            //se pinta de negro la llanta seleccionada
+            imageViewLantas[llantaSeleccionada-1].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llanta));
 
         }
     };
+
+    public void repintarLLantas()
+    {
+        for(int i=0; i<llanta_tag.length;i++)
+        {
+            if(!llanta_tag[i].isEmpty()) //Si tiene tag, la pinta verde
+                imageViewLantas[i].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaverde));
+            else // si no tiene tag, la pinta roja
+                imageViewLantas[i].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
+        }
+    }
+
 
     public void goFragmentAnterior()
     {
@@ -918,6 +930,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
                     }
                     else
                         llanta_tag[llantaSeleccionada-1]=tagsLeidos.get(indice);
+
 
                     actualizarTabla();
                     menuSeleccion=false;

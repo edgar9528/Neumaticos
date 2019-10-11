@@ -359,7 +359,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
             }
             else
             {
-                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error:"+mensaje, Toast.LENGTH_LONG).show();
                 goFragmentAnterior();
             }
         }
@@ -370,9 +370,21 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
         }
     }
 
+    public void repintarLLantas()
+    {
+        for(int i=0; i<llanta_mm.length;i++)
+        {
+            if(!llanta_mm[i].isEmpty()) //Si tiene mm, la pinta verde
+                imageViewLantas[i].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaverde));
+            else // si no tiene mm, la pinta roja
+                imageViewLantas[i].setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.llantaroja));
+        }
+    }
 
     public void actualizarTabla()
     {
+        repintarLLantas();
+
         //TABLA NEUMATICOS
         tableLayout.removeAllViews();
         TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_entrada, null);
