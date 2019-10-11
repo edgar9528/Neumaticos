@@ -83,6 +83,12 @@ public class AltaFragment extends Fragment implements AsyncResponse{
         spinner_ubicacion = view.findViewById(R.id.spinner_ubicacion);
         button_terminar = view.findViewById(R.id.button_terminar1);
         button_cancelar = view.findViewById(R.id.button_cancelar1);
+
+        almacenes = new ArrayList<>();
+        almacenes_id = new ArrayList<>();
+        marcas = new ArrayList<>();
+        marcas_id = new ArrayList<>();
+
         obtenerUsuario();
 
         tv_alta.setText("Código: "+codigo);
@@ -107,9 +113,11 @@ public class AltaFragment extends Fragment implements AsyncResponse{
             public void onClick(View view) {
                 RevisaTextos revisaTextos = new RevisaTextos();
 
-                if(revisaTextos.llenos(textInputs))
+                if(revisaTextos.llenos(textInputs) && marcas_id.size()>0 && almacenes_id.size()>0)
                 {
                     ArrayList<String> datos = revisaTextos.obtenerStrings(textInputs);
+
+
                     String id_marca = marcas_id.get((int)spinner_marca.getSelectedItemId() );
                     String id_almacen = almacenes_id.get((int)spinner_ubicacion.getSelectedItemId() );
 
@@ -236,32 +244,36 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
                 if(peticion==0)
                 {
-                    marcas = new ArrayList<>();
-                    marcas_id = new ArrayList<>();
+                    if(resultado.length>1) {
 
-                    for (int i = 0; i < resultado.length; i = i + 2) {
-                        marcas_id.add(resultado[i]);
-                        marcas.add(resultado[i + 1]);
+                        for (int i = 0; i < resultado.length; i = i + 2) {
+                            marcas_id.add(resultado[i]);
+                            marcas.add(resultado[i + 1]);
+                        }
+
+                        spinner_marca.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, marcas));
+                        peticion++;
+
+                        obtenerInfoSpinnerAlmacen();
                     }
-
-                    spinner_marca.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, marcas));
-                    peticion++;
-
-                    obtenerInfoSpinnerAlmacen();
+                    else
+                        Toast.makeText(getContext(), "No existen marcas", Toast.LENGTH_SHORT).show();
                 }
                 else
                     if(peticion==1)
                     {
-                        almacenes = new ArrayList<>();
-                        almacenes_id = new ArrayList<>();
+                        if(resultado.length>1) {
 
-                        for (int i = 0; i < resultado.length; i = i + 2) {
-                            almacenes_id.add(resultado[i]);
-                            almacenes.add(resultado[i + 1]);
+                            for (int i = 0; i < resultado.length; i = i + 2) {
+                                almacenes_id.add(resultado[i]);
+                                almacenes.add(resultado[i + 1]);
+                            }
+
+                            spinner_ubicacion.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
+                            peticion++;
                         }
-
-                        spinner_ubicacion.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
-                        peticion++;
+                        else
+                            Toast.makeText(getContext(), "No existen almacenes", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {

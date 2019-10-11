@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,9 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
         tv_codigo = view.findViewById(R.id.tv_tagLeido);
         button_cancelar = view.findViewById(R.id.button_cancelar3);
         button_terminar = view.findViewById(R.id.button_terminar3);
+
+        bajaMantenimiento = new ArrayList<>();
+        bajaMantenimiento_id = new ArrayList<>();
 
 
         if(tipo.equals("Baja"))
@@ -224,16 +228,19 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
                 if(peticion==0)
                 {
                     String[] resultado = mensaje.split("\u0009");
+                    Log.d("salida","size:"+resultado.length);
 
-                    bajaMantenimiento = new ArrayList<>();
-                    bajaMantenimiento_id = new ArrayList<>();
+                    if(resultado.length>1) {
 
-                    for (int i = 0; i < resultado.length; i = i + 2) {
-                        bajaMantenimiento_id.add(resultado[i]);
-                        bajaMantenimiento.add(resultado[i + 1]);
+                        for (int i = 0; i < resultado.length; i = i + 2) {
+                            bajaMantenimiento_id.add(resultado[i]);
+                            bajaMantenimiento.add(resultado[i + 1]);
+                        }
+                        llenarSpinners(getView());
+                        peticion++;
                     }
-                    llenarSpinners(getView());
-                    peticion++;
+                    else
+                        Toast.makeText(getContext(), "No se encontro información", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {

@@ -70,6 +70,9 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
         button_cancelar = view.findViewById(R.id.button_cancelar2);
         spinner_almacenes = view.findViewById(R.id.spinner_ubicacion1);
 
+        almacenes = new ArrayList<>();
+        almacenes_id = new ArrayList<>();
+
         tv_tag.setText(codigo);
 
         obtenerUsuario();
@@ -82,18 +85,22 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
 
                 if(!ubicacion_nueva_id.equals(ubicacion_id))
                 {
-                    String command;
+                    if(almacenes.size()>0) {
+                        String command;
 
-                    if(esAlmacen)
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "A"+"|" + ubicacion_id +"|"+usuario+"\u001a";
+                        if (esAlmacen)
+                            command = "13|" + codigo + "|" + ubicacion_nueva_id + "|" + "A" + "|" + ubicacion_id + "|" + usuario + "\u001a";
+                        else
+                            command = "13|" + codigo + "|" + ubicacion_nueva_id + "|" + "R" + "|" + ubicacion_id + "|" + usuario + "\u001a";
+
+                        ConexionSocket conexionSocket2 = new ConexionSocket();
+                        conexionSocket2.command = command;
+                        conexionSocket2.context = CambiaubiFragment.this.getActivity();
+                        conexionSocket2.delegate = CambiaubiFragment.this;
+                        conexionSocket2.execute();
+                    }
                     else
-                        command= "13|"+codigo+"|"+ubicacion_nueva_id+"|"+ "R"+"|" + ubicacion_id +"|"+usuario+"\u001a";
-
-                    ConexionSocket conexionSocket2 = new ConexionSocket();
-                    conexionSocket2.command = command;
-                    conexionSocket2.context = CambiaubiFragment.this.getActivity();
-                    conexionSocket2.delegate = CambiaubiFragment.this;
-                    conexionSocket2.execute();
+                        Toast.makeText(getContext(), "Debe seleccionar un almacen", Toast.LENGTH_SHORT).show();
 
                 }
                 else
@@ -146,29 +153,28 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
             {
                 if(peticion==0)
                 {
-
                     String[] resultado = mensaje.split("\u0009");
 
-                    almacenes = new ArrayList<>();
-                    almacenes_id = new ArrayList<>();
+                    if(resultado.length>1) {
 
-                    esAlmacen=false;
+                        esAlmacen = false;
 
-                    for (int i = 0; i < resultado.length; i = i + 2) {
-                        almacenes_id.add(resultado[i]);
-                        almacenes.add(resultado[i + 1]);
-                        if(resultado[i+1].equals(ubicacion))
-                            esAlmacen=true;
+                        for (int i = 0; i < resultado.length; i = i + 2) {
+                            almacenes_id.add(resultado[i]);
+                            almacenes.add(resultado[i + 1]);
+                            if (resultado[i + 1].equals(ubicacion))
+                                esAlmacen = true;
+                        }
+
+                        if (esAlmacen)
+                            tv_ubicacion.setText("Llanta en almacen: " + ubicacion);
+                        else
+                            tv_ubicacion.setText("Llanta en ruta: " + ubicacion);
+
+                        spinner_almacenes.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
+
+                        peticion++;
                     }
-
-                    if(esAlmacen)
-                        tv_ubicacion.setText("Llanta en almacen: "+ubicacion);
-                    else
-                        tv_ubicacion.setText("Llanta en ruta: "+ubicacion);
-
-                    spinner_almacenes.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, almacenes));
-
-                    peticion++;
                 }
                 else
                 {

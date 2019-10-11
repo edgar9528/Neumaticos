@@ -137,36 +137,46 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
                 if(peticion==0)
                 {
                     String[] resultado = mensaje.split(",");
+                    Log.d("salida", "r:"+ resultado.length);
+                    Log.d("salida", "r:"+ resultado[0]);
 
-                    rutas = new ArrayList<>();
-                    rutas_id = new ArrayList<>();
+                    if(resultado.length>1) {
 
-                    for (int i = 0; i < resultado.length; i = i + 2) {
-                        rutas_id.add(resultado[i]);
-                        rutas.add(resultado[i + 1]);
+                        rutas = new ArrayList<>();
+                        rutas_id = new ArrayList<>();
+
+                        for (int i = 0; i < resultado.length; i = i + 2) {
+                            rutas_id.add(resultado[i]);
+                            rutas.add(resultado[i + 1]);
+                        }
+                        llenarSpinners(getView());
+                        peticion++;
                     }
-                    llenarSpinners(getView());
-                    peticion++;
+                    else
+                        Toast.makeText(getContext(), "No existen rutas", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    String[] datos = {"Ruta: ","Responsable: ","Marca: ","Año: ",
-                                    "No. Serie: ","Placas: ","Tipo vehiculo: ","Total llantas: "};
+                    String[] datos = {"Ruta: ", "Responsable: ", "Marca: ", "Año: ",
+                                "No. Serie: ", "Placas: ", "Tipo vehiculo: ", "Total llantas: "};
                     String[] resultado = mensaje.split("\u0009");
 
-                    String mostrar="";
+                    if(resultado.length>1) {
+                        String mostrar = "";
 
-                    for(int i=0; i<datos.length;i++)
-                    {
-                        mostrar=mostrar+datos[i]+resultado[i]+"\n";
+                        for (int i = 0; i < datos.length; i++) {
+                            mostrar = mostrar + datos[i] + resultado[i] + "\n";
+                        }
+
+                        totalLlantas = Integer.parseInt(resultado[7]);
+                        tipoVehiculo = resultado[8];
+                        responsable = resultado[1];
+
+
+                        mensajeConfirmacion(mostrar);
                     }
-
-                    totalLlantas= Integer.parseInt(resultado[7]) ;
-                    tipoVehiculo=resultado[8];
-                    responsable=resultado[1];
-
-
-                    mensajeConfirmacion(mostrar);
+                    else
+                        Toast.makeText(getContext(), "No existen datos", Toast.LENGTH_SHORT).show();
                 }
             }
             else
