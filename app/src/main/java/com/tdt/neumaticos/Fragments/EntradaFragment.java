@@ -188,7 +188,9 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                     if(verificarMM())
                     {
                         String command = crearPeticion();
-                        Log.d("salida","comando:"+command);
+                        command = command+"\u001a";
+                        peticionSocket(command);
+
                     }
                     else
                     {
@@ -214,11 +216,11 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
 
         if(tipoVentana.equals("Entrada"))
         {
-            command = "15"+ruta+"|"+kilometraje+"|"+user;
+            command = "15|"+ruta+"|"+kilometraje+"|"+user;
         }
         else
         {
-            command = "14"+ruta+"|"+kilometraje+"|"+user;
+            command = "14|"+ruta+"|"+kilometraje+"|"+user;
         }
 
 
@@ -344,6 +346,15 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                     }
                     //Muestra las llantas/refacciones y sus tags
                     actualizarTabla();
+                }
+                else
+                {
+                    if(tipoVentana.equals("Entrada"))
+                        Toast.makeText(getContext(), "Entrada agregada", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Salida agregada", Toast.LENGTH_LONG).show();
+
+                    goFragmentAnterior();
                 }
             }
             else
