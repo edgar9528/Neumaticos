@@ -303,6 +303,15 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
     //RECIBE TODAS LAS PETICIONES AL SOCKET
     @Override
     public void processFinish(String output){
+
+        if(output.contains("Error servidor:"))
+        {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            Toast.makeText(getContext(), output, Toast.LENGTH_SHORT).show();
+        }
+        else
         try
         {
             String clave = output.substring(0,2);

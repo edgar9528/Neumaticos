@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     Button button_sesion;
@@ -30,7 +33,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     @Override
     public void onBackPressed() {
-
+        Intent intent = new Intent(getApplication(), InicioActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -53,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 verificarServidor();
                 if(servidor_conf) {
                     if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
@@ -106,6 +112,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
     @Override
     public void processFinish(String output){
 
+        if(output.contains("Error servidor:"))
+        {
+            Toast.makeText(this, output, Toast.LENGTH_SHORT).show();
+        }
+        else
         try
         {
             String clave = output.substring(0,2);

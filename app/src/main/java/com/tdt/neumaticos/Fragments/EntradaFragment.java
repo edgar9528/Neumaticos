@@ -3,6 +3,7 @@ package com.tdt.neumaticos.Fragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
 import com.tdt.neumaticos.Clases.RevisaTextos;
+import com.tdt.neumaticos.LoginActivity;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
@@ -286,6 +288,15 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
     //RECIBE TODAS LAS PETICIONES AL SOCKET
     @Override
     public void processFinish(String output){
+
+        if(output.contains("Error servidor:"))
+        {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            Toast.makeText(getContext(), output, Toast.LENGTH_SHORT).show();
+        }
+        else
         try
         {
             String clave = output.substring(0,2);
@@ -529,20 +540,6 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
                 k=iv_clave.length;
             }
         }
-    }
-
-
-    public void mensajeError(String men)
-    {
-        android.support.v7.app.AlertDialog.Builder dialogo1 = new android.support.v7.app.AlertDialog.Builder(getContext());
-        dialogo1.setTitle("Error");
-        dialogo1.setMessage(men);
-        dialogo1.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-            }
-        });
-        dialogo1.show();
     }
 
     //LEER CODIGO TC20

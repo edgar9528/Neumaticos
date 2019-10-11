@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class ConexionSocket extends AsyncTask<String,Integer,String>
 {
@@ -59,6 +60,23 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
 
             //byte[] comm=command.getBytes( StandardCharsets.US_ASCII );
 
+            /*String cadena=command;
+            byte[] bytes = cadena.getBytes(StandardCharsets.UTF_16);
+
+            ArrayList<String> arrayList = new ArrayList<>();
+            for(int i=0; i<bytes.length;i++)
+            {
+                if(bytes[i]>0)
+                    arrayList.add(  String.valueOf( bytes[i]) );
+            }
+
+            byte[] bytes1 = new byte[arrayList.size()];
+            for(int i=0; i<arrayList.size();i++)
+            {
+                bytes1[i]= Byte.parseByte(arrayList.get(i));
+                Log.d("salida","b:"+Byte.parseByte(arrayList.get(i)));
+            }*/
+
             //Establecer conexion con servidor
             serverAddr = InetAddress.getByName(SERVER_IP);
             socket = new Socket(serverAddr, SERVER_PORT);
@@ -88,7 +106,7 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
                 }
 
                 respuestaSocket = strFileContents.substring(13,strFileContents.length()-1);
-                Log.d("salida","_"+respuestaSocket+"_");
+                Log.d("salida","resp:"+respuestaSocket);
             }
 
             //enviar el parametro
@@ -102,9 +120,10 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
             result=respuestaSocket;
 
         } catch (Exception e) {
-            result= e.toString();
-        }
+            result= "Error servidor: "+e.toString();
 
+        }
+        Log.d("salida","socket:"+result);
         return result;
     }
 

@@ -14,5 +14,7 @@
     <string name="SERVIDOR" translatable="false">http://192.168.43.22/Fym/</string>
 
     <string name="formato_fecha">dd/mm/yyyy</string>
+    <string name="title_activity_inicio">InicioActivity</string>
+    <string name="NAMESPACE" translatable="false">"http://tempuri.org/"</string>
 
 </resources>

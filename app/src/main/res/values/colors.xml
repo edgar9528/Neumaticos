@@ -11,4 +11,6 @@
     <color name="titulo">#2048c9</color>
     <color name="negro">#000</color>
 
+    <color name="grey">#E5E5E5</color>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.tdt.neumaticos.Fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
+import com.tdt.neumaticos.LoginActivity;
 import com.tdt.neumaticos.MainActivity;
 import com.tdt.neumaticos.R;
 
@@ -203,6 +205,14 @@ public class BajamatenimientoFragment extends Fragment implements AsyncResponse 
 
     @Override
     public void processFinish(String output){
+        if(output.contains("Error servidor:"))
+        {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            Toast.makeText(getContext(), output, Toast.LENGTH_SHORT).show();
+        }
+        else
         try
         {
             String clave = output.substring(0,2);

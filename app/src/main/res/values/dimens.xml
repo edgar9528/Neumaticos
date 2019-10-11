@@ -13,4 +13,5 @@
     <dimen name="Text_data_profile">18sp</dimen>
     <dimen name="Text_data">20sp</dimen>
     <dimen name="Text_rb">18sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

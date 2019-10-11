@@ -1,6 +1,7 @@
 package com.tdt.neumaticos.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.tdt.neumaticos.BuildConfig;
 import com.tdt.neumaticos.Clases.AsyncResponse;
 import com.tdt.neumaticos.Clases.ConexionSocket;
+import com.tdt.neumaticos.LoginActivity;
 import com.tdt.neumaticos.R;
 
 import java.util.ArrayList;
@@ -126,6 +128,14 @@ public class CambiaubiFragment extends Fragment implements AsyncResponse {
     @Override
     public void processFinish(String output){
 
+        if(output.contains("Error servidor:"))
+        {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            Toast.makeText(getContext(), output, Toast.LENGTH_SHORT).show();
+        }
+        else
         try
         {
             String clave = output.substring(0,2);
