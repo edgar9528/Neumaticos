@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.tdt.neumaticos.Adapter.DrawerListAdapter;
 import com.tdt.neumaticos.Fragments.LeercodigoFragment;
 import com.tdt.neumaticos.Fragments.SeleccionarutaFragment;
+import com.tdt.neumaticos.Fragments.VacioFragment;
 import com.tdt.neumaticos.Model.DrawerItem;
 
 import java.util.ArrayList;
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 default:
                     dato="Alta";
-                    fragment = new LeercodigoFragment();
+                    fragment = new VacioFragment();
                     break;
             }
 

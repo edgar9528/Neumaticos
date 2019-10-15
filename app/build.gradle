@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.edgar_avc.fym"
+        applicationId "com.tdt.neumaticos"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
