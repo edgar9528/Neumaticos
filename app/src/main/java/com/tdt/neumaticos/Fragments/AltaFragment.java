@@ -91,7 +91,7 @@ public class AltaFragment extends Fragment implements AsyncResponse{
 
         obtenerUsuario();
 
-        tv_alta.setText("Código: "+codigo);
+        tv_alta.setText("Tag: "+codigo);
         obtenerInfoSpinnerMarcas();
 
         textInputs[1].setOnClickListener(new View.OnClickListener() {

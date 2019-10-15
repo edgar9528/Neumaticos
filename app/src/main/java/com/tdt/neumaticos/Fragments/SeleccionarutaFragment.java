@@ -158,7 +158,7 @@ public class SeleccionarutaFragment extends Fragment implements AsyncResponse {
                 else
                 {
                     String[] datos = {"Ruta: ", "Responsable: ", "Marca: ", "Año: ",
-                                "No. Serie: ", "Placas: ", "Tipo vehiculo: ", "Total llantas: "};
+                                "No. Serie: ", "Placas: ", "Tipo vehiculo: ", "Total neumáticos: "};
                     String[] resultado = mensaje.split("\u0009");
 
                     if(resultado.length>1) {

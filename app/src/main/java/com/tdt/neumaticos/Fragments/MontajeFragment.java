@@ -452,7 +452,7 @@ public class MontajeFragment extends Fragment implements AsyncResponse {
         TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_detalles, null);
 
         ((TextView) tr.findViewById(R.id.lTitle)).setText("#"); //Dato de la columna 1
-        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG NUMATICO"); //Dato de la columna 2
+        ((TextView) tr.findViewById(R.id.lDetail)).setText("TAG NEUMÁTICO"); //Dato de la columna 2
         tableLayout.addView(tr);
 
         for(int i=0; i<totalLlantas;i++)

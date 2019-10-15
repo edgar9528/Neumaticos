@@ -370,7 +370,7 @@ public class EntradaFragment extends Fragment implements AsyncResponse {
             }
             else
             {
-                Toast.makeText(getContext(), "Error:"+mensaje, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error: "+mensaje, Toast.LENGTH_LONG).show();
                 goFragmentAnterior();
             }
         }
