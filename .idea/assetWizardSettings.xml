@@ -51,7 +51,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="scalingPercent" value="51" />
+                                                <entry key="scalingPercent" value="46" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -62,8 +62,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="3e94ff" />
-                                      <entry key="foregroundImage" value="C:\Users\Ventas\Documents\logotdt.png" />
+                                      <entry key="backgroundColor" value="6998ff" />
+                                      <entry key="foregroundImage" value="C:\Users\DELL\Pictures\logo app\logo.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
