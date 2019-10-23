@@ -62,13 +62,23 @@
             </TextView>
 
 
+            <TextView
+                android:paddingTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No. de serie terminal"
+                android:textColor="#fff"
+                android:textSize="20dp"
+                android:gravity="center_horizontal"
+                >
+            </TextView>
 
             <TextView
                 android:id="@+id/tv_num_serie"
                 android:paddingTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Versión 1.0.0"
+                android:text="0"
                 android:textColor="#fff"
                 android:textSize="20dp"
                 android:gravity="center_horizontal"

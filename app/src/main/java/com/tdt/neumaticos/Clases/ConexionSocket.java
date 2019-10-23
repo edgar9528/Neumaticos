@@ -3,6 +3,7 @@ package com.tdt.neumaticos.Clases;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
@@ -76,6 +77,7 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
                 bytes1[i]= Byte.parseByte(arrayList.get(i));
                 Log.d("salida","b:"+Byte.parseByte(arrayList.get(i)));
             }*/
+
 
             //Establecer conexion con servidor
             serverAddr = InetAddress.getByName(SERVER_IP);

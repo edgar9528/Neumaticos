@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
             }
             else
             {
-                Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
             }
 
         }

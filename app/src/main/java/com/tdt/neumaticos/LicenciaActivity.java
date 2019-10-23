@@ -87,7 +87,7 @@ public class LicenciaActivity extends AppCompatActivity {
 
                         if(licencia.length()==29)
                         {
-                            if(licencia.contains("01002620001"))
+                            if(licencia.contains("01001020001"))
                             {
                                 ActivaLicencia activaLicencia = new ActivaLicencia();
                                 activaLicencia.execute();

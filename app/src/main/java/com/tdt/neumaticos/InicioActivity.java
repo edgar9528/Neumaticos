@@ -64,17 +64,13 @@ public class InicioActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(getApplication(), LoginActivity.class);
-                    startActivity(intent);
-
-                    /*
                     if (licenciaValida) {
-                        Intent intent = new Intent(getApplication(), InicioActivity.class);
+                        Intent intent = new Intent(getApplication(), LoginActivity.class);
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(getApplication(), "Ingrese una licencia", Toast.LENGTH_SHORT).show();
-                    }*/
+                        Toast.makeText(getApplication(), "No cuenta con una licencia", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
