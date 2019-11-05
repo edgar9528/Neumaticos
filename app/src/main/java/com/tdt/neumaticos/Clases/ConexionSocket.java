@@ -78,7 +78,6 @@ public class ConexionSocket extends AsyncTask<String,Integer,String>
                 Log.d("salida","b:"+Byte.parseByte(arrayList.get(i)));
             }*/
 
-
             //Establecer conexion con servidor
             serverAddr = InetAddress.getByName(SERVER_IP);
             socket = new Socket(serverAddr, SERVER_PORT);

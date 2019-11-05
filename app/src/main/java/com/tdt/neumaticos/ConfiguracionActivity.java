@@ -56,8 +56,6 @@ public class ConfiguracionActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
     public void guardarServidor()
